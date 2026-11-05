@@ -71,8 +71,11 @@ set (UOS_POSIX_ARCH_DIR "${_uos_siblings}/micro-os-plus-iii-posix-arch"
      CACHE PATH "µOS++ III POSIX-arch port working copy")
 set (UOS_CORTEXM_DIR "${_uos_siblings}/micro-os-plus-iii-cortexm"
      CACHE PATH "µOS++ III Cortex-M port working copy")
+set (UOS_RISCV_DIR "${_uos_siblings}/micro-os-plus-iii-riscv"
+     CACHE PATH "µOS++ III RISC-V port working copy")
 
-foreach (_dep_var IN ITEMS UOS_AARCH32_DIR UOS_AARCH64_DIR UOS_POSIX_ARCH_DIR UOS_CORTEXM_DIR)
+foreach (_dep_var IN ITEMS UOS_AARCH32_DIR UOS_AARCH64_DIR UOS_POSIX_ARCH_DIR UOS_CORTEXM_DIR
+                          UOS_RISCV_DIR)
   if (NOT EXISTS "${${_dep_var}}/CMakeLists.txt"
       AND EXISTS "${${_dep_var}}.git/CMakeLists.txt")
     set (${_dep_var} "${${_dep_var}}.git" CACHE PATH
@@ -115,6 +118,13 @@ elseif (PLATFORM_NAME MATCHES "^pico2" OR PLATFORM_NAME MATCHES "^2xcortex")
     message (FATAL_ERROR "Cannot find the Cortex-M port at ${UOS_CORTEXM_DIR}")
   endif ()
   add_subdirectory ("${UOS_CORTEXM_DIR}" "port-bin")
+elseif (PLATFORM_NAME MATCHES "^riscv")
+  # The RISC-V port (Milk-V Duo, RV64GC, M-mode): brings iii.
+  message (VERBOSE "Adding the RISC-V port (brings iii)...")
+  if (NOT EXISTS "${UOS_RISCV_DIR}/CMakeLists.txt")
+    message (FATAL_ERROR "Cannot find the RISC-V port at ${UOS_RISCV_DIR}")
+  endif ()
+  add_subdirectory ("${UOS_RISCV_DIR}" "port-bin")
 else ()
   # Fallback: the plain kernel, one level above (upstream behaviour).
   message (VERBOSE "Adding the top library...")

@@ -63,6 +63,7 @@ semihosting and mirrored on the UART.
 | `cortexm-weactf411` | cortexm | WeAct Studio F411CE | 1× Cortex-M4F | 1 | qemu (netduinoplus2, 5 tests), hwd | DAPLink CMSIS-DAP (or WCH-Link) |
 | `cortexm-weactf412` | cortexm | WeAct Studio F412RE | 1× Cortex-M4F | 1 | hwd only (SRAM 256K > QEMU 128K) | ST-Link |
 | `native` | posix-arch | the Linux host | host threads as CPUs | 4 (`-DNCPU`) | host | — |
+| `riscv-milkv-duo` | riscv | Milk-V Duo 64 MB (CV1800B) | 1× T-Head C906, RV64GC, M-mode | 1 | qemu (QEMU `virt`, 14 tests), hwd (loaded into DDR over JTAG, warm reset between tests) | SIPEED RV CMSIS-DAP `d6e7:3507` |
 | `2xcortex-m33` | cortexm | QEMU `mps2-an521` | 2× Cortex-M33 | 2 | QEMU | — |
 | `pico2-1cpu` | cortexm | QEMU `mps2-an505` | 1× Cortex-M33 | 1 | QEMU | — |
 | `qemu-cortex-m0` | cortexm | QEMU `mps2-an385` | Cortex-M3 (the platform passes `--cpu cortex-m3`, not an M0) | 1 | QEMU | — |
@@ -144,6 +145,7 @@ Where each suite runs:
 | `cortexm-nucleof411`, `cortexm-weactf411` | qemu, hwd | qemu, hwd | qemu, hwd | SMP ×1 |
 | `cortexm-weactf412` | hwd | hwd | hwd | SMP ×1 |
 | `native` | host (`rtos-apis`, single; `smp-rtos-apis`, SMP 4) | host (`mutex-stress`, single; `smp-mutex-stress`, SMP 4) | host | see §8 |
+| `riscv-milkv-duo` | qemu, hwd | qemu, hwd | qemu, hwd | single (`OS_NCPU=1`, scalar scheduler) |
 | `2xcortex-m33` | QEMU | QEMU | QEMU | SMP 2 |
 | `pico2-1cpu` | QEMU | QEMU | QEMU | single |
 | `qemu-cortex-m0/m3/m4f/m7f` | QEMU | QEMU | QEMU | single (local cortexm port's generic QEMU cores, `OS_NCPU=1`) |

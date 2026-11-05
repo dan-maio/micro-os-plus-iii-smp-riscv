@@ -16,7 +16,7 @@ platform, test and probe). This file is only a short orientation.
 
 ## Platforms
 
-There are 24 platforms under `platforms/`, grouped by the port they exercise:
+There are 25 platforms under `platforms/`, grouped by the port they exercise:
 
 - `aarch32-rpi-zero-2w`, `aarch32-rpi3b`, `aarch32-luckfox-lyra` — the AArch32 port
 - `aarch64-rpi-zero-2w`, `aarch64-rpi3b`, `aarch64-rpi4b` — the AArch64 port
@@ -28,6 +28,9 @@ There are 24 platforms under `platforms/`, grouped by the port they exercise:
 - `qemu-cortex-m0`, `qemu-cortex-m3`, `qemu-cortex-m4f`, `qemu-cortex-m7f` —
   the Cortex-M port's generic M0/M3/M4F/M7 cores in QEMU, run single-core
 - `native` — the POSIX-arch port, as a host process (gcc or clang)
+- `riscv-milkv-duo` — the RISC-V port (RV64GC, M-mode, one hart) on the
+  Milk-V Duo (CV1800B, T-Head C906); the `qemu` images run on QEMU's `virt`
+  machine, the `hwd` ones are loaded into the Duo's DDR over JTAG
 - `nucleo-f411re`, `nucleo-f767zi`, `nucleo-h743zi`, `raspberrypi-pico` —
   the upstream plain-kernel platforms
 

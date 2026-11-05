@@ -2207,6 +2207,124 @@
           "buildType": "MinSizeRel",
           "shortConfigurationName": "a64p4r"
         }
+      },
+      "riscv-actions": {
+        "hidden": true,
+        "actions": {
+          "install": [
+            "xpm install --config {{ configuration.name }}"
+          ]
+        }
+      },
+      "riscv-none-elf-gcc-dependencies": {
+        "hidden": true,
+        "$devDependenciesUrl": "https://www.npmjs.com/package/@xpack-dev-tools/riscv-none-elf-gcc",
+        "devDependencies": {
+          "@xpack-dev-tools/riscv-none-elf-gcc": "15.2.0-1.1"
+        }
+      },
+      "qemu-riscv-dependencies": {
+        "hidden": true,
+        "$devDependenciesUrl": "https://www.npmjs.com/package/@xpack-dev-tools/qemu-riscv",
+        "devDependencies": {
+          "@xpack-dev-tools/qemu-riscv": "9.2.4-1.1"
+        }
+      },
+      "riscv-milkv-duo-cmake-gcc-debug": {
+        "inherit": [
+          "riscv-actions",
+          "cmake-actions",
+          "riscv-none-elf-gcc-dependencies",
+          "qemu-riscv-dependencies",
+          "openocd-dependencies",
+          "short-win-paths-properties"
+        ],
+        "properties": {
+          "buildType": "Debug",
+          "platformName": "riscv-milkv-duo",
+          "toolchainFileName": "riscv-none-elf-gcc.cmake",
+          "shortConfigurationName": "rmdd"
+        },
+        "actions": {
+          "test": "cd {{ properties.buildFolderRelativePath }} && ctest -V -LE hwd",
+          "test-blinky-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-blinky-qemu",
+          "test-blinky-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-blinky-hwd",
+          "test-clock-test-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-clock-test-qemu",
+          "test-clock-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-clock-test-hwd",
+          "test-cmsis-os-validator-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-cmsis-os-validator-qemu",
+          "test-cmsis-os-validator-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-cmsis-os-validator-hwd",
+          "test-exc-test-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-exc-test-qemu",
+          "test-exc-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-exc-test-hwd",
+          "test-fp-switch-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-fp-switch-qemu",
+          "test-fp-switch-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-fp-switch-hwd",
+          "test-instrumentation-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-instrumentation-qemu",
+          "test-instrumentation-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-instrumentation-hwd",
+          "test-mmu-test-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-mmu-test-qemu",
+          "test-mmu-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-mmu-test-hwd",
+          "test-mos-test1-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-mos-test1-qemu",
+          "test-mos-test1-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-mos-test1-hwd",
+          "test-mutex-ceiling-test-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-mutex-ceiling-test-qemu",
+          "test-mutex-ceiling-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-mutex-ceiling-test-hwd",
+          "test-mutex-stress-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-mutex-stress-qemu",
+          "test-mutex-stress-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-mutex-stress-hwd",
+          "test-rtos-apis-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-rtos-apis-qemu",
+          "test-rtos-apis-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-rtos-apis-hwd",
+          "test-sc-test-ko-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-sc-test-ko-qemu",
+          "test-sc-test-ko-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-sc-test-ko-hwd",
+          "test-semihosting-test-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-semihosting-test-qemu",
+          "test-semihosting-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-semihosting-test-hwd",
+          "test-smp_test0-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-smp_test0-qemu",
+          "test-smp_test0-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-smp_test0-hwd",
+          "test-hwd-all": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && BUILD={{ properties.buildFolderRelativePath }}/platform-bin/port-tests bash ../../micro-os-plus-iii-riscv/test/boards/milkv-duo/hw-all.sh"
+        }
+      },
+      "riscv-milkv-duo-cmake-gcc-release": {
+        "inherit": [
+          "riscv-actions",
+          "cmake-actions",
+          "riscv-none-elf-gcc-dependencies",
+          "qemu-riscv-dependencies",
+          "openocd-dependencies",
+          "short-win-paths-properties"
+        ],
+        "properties": {
+          "buildType": "Release",
+          "platformName": "riscv-milkv-duo",
+          "toolchainFileName": "riscv-none-elf-gcc.cmake",
+          "shortConfigurationName": "rmdr"
+        },
+        "actions": {
+          "test": "cd {{ properties.buildFolderRelativePath }} && ctest -V -LE hwd",
+          "test-blinky-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-blinky-qemu",
+          "test-blinky-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-blinky-hwd",
+          "test-clock-test-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-clock-test-qemu",
+          "test-clock-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-clock-test-hwd",
+          "test-cmsis-os-validator-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-cmsis-os-validator-qemu",
+          "test-cmsis-os-validator-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-cmsis-os-validator-hwd",
+          "test-exc-test-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-exc-test-qemu",
+          "test-exc-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-exc-test-hwd",
+          "test-fp-switch-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-fp-switch-qemu",
+          "test-fp-switch-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-fp-switch-hwd",
+          "test-instrumentation-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-instrumentation-qemu",
+          "test-instrumentation-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-instrumentation-hwd",
+          "test-mmu-test-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-mmu-test-qemu",
+          "test-mmu-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-mmu-test-hwd",
+          "test-mos-test1-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-mos-test1-qemu",
+          "test-mos-test1-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-mos-test1-hwd",
+          "test-mutex-ceiling-test-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-mutex-ceiling-test-qemu",
+          "test-mutex-ceiling-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-mutex-ceiling-test-hwd",
+          "test-mutex-stress-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-mutex-stress-qemu",
+          "test-mutex-stress-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-mutex-stress-hwd",
+          "test-rtos-apis-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-rtos-apis-qemu",
+          "test-rtos-apis-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-rtos-apis-hwd",
+          "test-sc-test-ko-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-sc-test-ko-qemu",
+          "test-sc-test-ko-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-sc-test-ko-hwd",
+          "test-semihosting-test-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-semihosting-test-qemu",
+          "test-semihosting-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-semihosting-test-hwd",
+          "test-smp_test0-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-smp_test0-qemu",
+          "test-smp_test0-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-smp_test0-hwd",
+          "test-hwd-all": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && BUILD={{ properties.buildFolderRelativePath }}/platform-bin/port-tests bash ../../micro-os-plus-iii-riscv/test/boards/milkv-duo/hw-all.sh"
+        }
       }
     }
   }
