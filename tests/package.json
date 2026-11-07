@@ -2406,6 +2406,58 @@
           "test-smp_test0-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-visionfive2-lite-smp_test0-hwd"
         }
       },
+      "riscv-ch32v307-evt-cmake-gcc-debug": {
+        "inherit": [
+          "riscv-actions",
+          "cmake-actions",
+          "riscv-none-elf-gcc-dependencies",
+          "short-win-paths-properties"
+        ],
+        "properties": {
+          "buildType": "Debug",
+          "platformName": "riscv-ch32v307-evt",
+          "toolchainFileName": "riscv-none-elf-gcc.cmake",
+          "shortConfigurationName": "rchd"
+        },
+        "actions": {
+          "test": "cd {{ properties.buildFolderRelativePath }} && ctest -V -LE hwd",
+          "test-blinky-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-ch32v307-evt-blinky-hwd",
+          "test-board-basics-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-ch32v307-evt-board-basics-hwd",
+          "test-cmsis-os-validator-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-ch32v307-evt-cmsis-os-validator-hwd",
+          "test-fp-switch-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-ch32v307-evt-fp-switch-hwd",
+          "test-instrumentation-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-ch32v307-evt-instrumentation-hwd",
+          "test-mutex-stress-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-ch32v307-evt-mutex-stress-hwd",
+          "test-pfic-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-ch32v307-evt-pfic-test-hwd",
+          "test-rtos-apis-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-ch32v307-evt-rtos-apis-hwd",
+          "test-smp-test1-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-ch32v307-evt-smp-test1-hwd"
+        }
+      },
+      "riscv-ch32v307-evt-cmake-gcc-release": {
+        "inherit": [
+          "riscv-actions",
+          "cmake-actions",
+          "riscv-none-elf-gcc-dependencies",
+          "short-win-paths-properties"
+        ],
+        "properties": {
+          "buildType": "Release",
+          "platformName": "riscv-ch32v307-evt",
+          "toolchainFileName": "riscv-none-elf-gcc.cmake",
+          "shortConfigurationName": "rchr"
+        },
+        "actions": {
+          "test": "cd {{ properties.buildFolderRelativePath }} && ctest -V -LE hwd",
+          "test-blinky-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-ch32v307-evt-blinky-hwd",
+          "test-board-basics-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-ch32v307-evt-board-basics-hwd",
+          "test-cmsis-os-validator-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-ch32v307-evt-cmsis-os-validator-hwd",
+          "test-fp-switch-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-ch32v307-evt-fp-switch-hwd",
+          "test-instrumentation-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-ch32v307-evt-instrumentation-hwd",
+          "test-mutex-stress-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-ch32v307-evt-mutex-stress-hwd",
+          "test-pfic-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-ch32v307-evt-pfic-test-hwd",
+          "test-rtos-apis-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-ch32v307-evt-rtos-apis-hwd",
+          "test-smp-test1-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-ch32v307-evt-smp-test1-hwd"
+        }
+      },
       "riscv-pico2-cmake-gcc-debug": {
         "inherit": [
           "riscv-actions",

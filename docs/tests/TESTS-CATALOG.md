@@ -65,6 +65,7 @@ semihosting and mirrored on the UART.
 | `native` | posix-arch | the Linux host | host threads as CPUs | 4 (`-DNCPU`) | host | — |
 | `riscv-milkv-duo` | riscv | Milk-V Duo 64 MB (CV1800B) | 1× T-Head C906, RV64GC, M-mode | 1 | qemu (QEMU `virt`, 14 tests), hwd (loaded into DDR over JTAG, warm reset between tests) | SIPEED RV CMSIS-DAP `d6e7:3507` |
 | `riscv-visionfive2-lite` | riscv | StarFive VisionFive 2 Lite (JH-7110S) | 4× SiFive U74, RV64GC, M-mode (+ an S7 monitor core, not used) | 4 | hwd only (22: 16 board tests -- emmc-probe, emmc-fs-test and smp-test-usb-cdc-file-fs use the eMMC area after the Linux partitions; the three smp-test-usb-cdc-* need their PC side, usb-host.py / usb-file-host.py -- + 6 suites, loaded into DDR over JTAG from the U-Boot prompt) | JTAG probe on Pico CMSIS-DAP `2e8a:000c` (or DAPLink `0d28:0204`) |
+| `riscv-ch32v307-evt` | riscv | WCH CH32V307V-EVT-R1 (CH32V307VCT6) | 1× QingKe V4F, RV32IMAFC (single-precision FPU), M-mode, the port's PFIC path | 1 | hwd only (9: board-basics (kernel-free), smp-test1, pfic-test + 6 suites, programmed into flash; 64 KiB SRAM: rtos-apis without FatFs, 2 KiB default stacks) | the on-board WCH-LinkE `1a86:8010` with the WCH OpenOCD fork (+ the probe-type patch) |
 | `2xcortex-m33` | cortexm | QEMU `mps2-an521` | 2× Cortex-M33 | 2 | QEMU | — |
 | `pico2-1cpu` | cortexm | QEMU `mps2-an505` | 1× Cortex-M33 | 1 | QEMU | — |
 | `qemu-cortex-m0` | cortexm | QEMU `mps2-an385` | Cortex-M3 (the platform passes `--cpu cortex-m3`, not an M0) | 1 | QEMU | — |
@@ -148,6 +149,7 @@ Where each suite runs:
 | `native` | host (`rtos-apis`, single; `smp-rtos-apis`, SMP 4) | host (`mutex-stress`, single; `smp-mutex-stress`, SMP 4) | host | see §8 |
 | `riscv-milkv-duo` | qemu, hwd | qemu, hwd | qemu, hwd | single (`OS_NCPU=1`, scalar scheduler) |
 | `riscv-visionfive2-lite` | hwd | hwd | hwd | SMP 4 (the suite's `__wrap_os_main()` starts CPUs 1..3 first) |
+| `riscv-ch32v307-evt` | hwd (no FatFs) | hwd | hwd (60/60) | single (`OS_NCPU=1`, the port's PFIC path) |
 | `2xcortex-m33` | QEMU | QEMU | QEMU | SMP 2 |
 | `pico2-1cpu` | QEMU | QEMU | QEMU | single |
 | `qemu-cortex-m0/m3/m4f/m7f` | QEMU | QEMU | QEMU | single (local cortexm port's generic QEMU cores, `OS_NCPU=1`) |
@@ -156,7 +158,9 @@ Where each suite runs:
 `fp-switch` runs where an M33 FPU does: `cortexm-pico2` (qemu, hwd),
 `2xcortex-m33` (QEMU, SMP 2) and `pico2-1cpu` (QEMU, single), and on the
 RISC-V boards with an FPU: `riscv-visionfive2-lite` (hwd, SMP 4; 2026-11-07:
-3894 rounds, 0 bad, 860 migrated) and `riscv-milkv-duo` (qemu, hwd, single).
+3894 rounds, 0 bad, 860 migrated), `riscv-ch32v307-evt` (hwd, single,
+single-precision FPU; 2026-11-07: 1188 rounds, 0 bad) and `riscv-milkv-duo`
+(qemu, hwd, single).
 Until 2026-11-07 the suite had an Arm path only, and on RISC-V it passed
 with nothing to test. On `cortexm-pico` (Cortex-M0+, no FPU) and
 `riscv-pico2` (Hazard3, no FPU) it builds and passes with nothing to test.

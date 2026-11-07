@@ -35,6 +35,11 @@ There are 25 platforms under `platforms/`, grouped by the port they exercise:
   Lite (JH-7110S, four SiFive U74, RV64GC, M-mode); every test and suite
   runs SMP on all four U74, `hwd` only (loaded into DDR over JTAG from the
   U-Boot prompt; QEMU does not model the board)
+- `riscv-ch32v307-evt` — the RISC-V port on the WCH CH32V307V-EVT-R1
+  (CH32V307, one QingKe V4F core, RV32IMAFC): no CLINT, so the port runs its
+  PFIC path (the PFIC software interrupt as PendSV, SysTick as the tick, the
+  PFIC threshold as BASEPRI, nested interrupts); `hwd` only, programmed into
+  flash over the on-board WCH-LinkE with the WCH OpenOCD fork
 - `nucleo-f411re`, `nucleo-f767zi`, `nucleo-h743zi`, `raspberrypi-pico` —
   the upstream plain-kernel platforms
 
