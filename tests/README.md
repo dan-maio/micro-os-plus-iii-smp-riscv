@@ -31,6 +31,10 @@ There are 25 platforms under `platforms/`, grouped by the port they exercise:
 - `riscv-milkv-duo` — the RISC-V port (RV64GC, M-mode, one hart) on the
   Milk-V Duo (CV1800B, T-Head C906); the `qemu` images run on QEMU's `virt`
   machine, the `hwd` ones are loaded into the Duo's DDR over JTAG
+- `riscv-visionfive2-lite` — the RISC-V port on the StarFive VisionFive 2
+  Lite (JH-7110S, four SiFive U74, RV64GC, M-mode); every test and suite
+  runs SMP on all four U74, `hwd` only (loaded into DDR over JTAG from the
+  U-Boot prompt; QEMU does not model the board)
 - `nucleo-f411re`, `nucleo-f767zi`, `nucleo-h743zi`, `raspberrypi-pico` —
   the upstream plain-kernel platforms
 

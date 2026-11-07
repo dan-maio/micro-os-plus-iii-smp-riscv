@@ -64,6 +64,7 @@ semihosting and mirrored on the UART.
 | `cortexm-weactf412` | cortexm | WeAct Studio F412RE | 1× Cortex-M4F | 1 | hwd only (SRAM 256K > QEMU 128K) | ST-Link |
 | `native` | posix-arch | the Linux host | host threads as CPUs | 4 (`-DNCPU`) | host | — |
 | `riscv-milkv-duo` | riscv | Milk-V Duo 64 MB (CV1800B) | 1× T-Head C906, RV64GC, M-mode | 1 | qemu (QEMU `virt`, 14 tests), hwd (loaded into DDR over JTAG, warm reset between tests) | SIPEED RV CMSIS-DAP `d6e7:3507` |
+| `riscv-visionfive2-lite` | riscv | StarFive VisionFive 2 Lite (JH-7110S) | 4× SiFive U74, RV64GC, M-mode (+ an S7 monitor core, not used) | 4 | hwd only (17: 11 board tests + 6 suites, loaded into DDR over JTAG from the U-Boot prompt) | JTAG probe on Pico CMSIS-DAP `2e8a:000c` (or DAPLink `0d28:0204`) |
 | `2xcortex-m33` | cortexm | QEMU `mps2-an521` | 2× Cortex-M33 | 2 | QEMU | — |
 | `pico2-1cpu` | cortexm | QEMU `mps2-an505` | 1× Cortex-M33 | 1 | QEMU | — |
 | `qemu-cortex-m0` | cortexm | QEMU `mps2-an385` | Cortex-M3 (the platform passes `--cpu cortex-m3`, not an M0) | 1 | QEMU | — |
@@ -129,7 +130,7 @@ suites' `harness-suite.cpp`, on cortexm.
 |---|---|
 | `rtos-apis` | Exercises the µOS++ C++ API, C API, ISO (`std::`) API, CMSIS-RTOS v1 wrapper and the POSIX I/O layer, plus a Chan FatFs test. |
 | `mutex-stress` | Several threads take one mutex at random intervals; the test checks that every thread got it and the distribution is sane. |
-| `fp-switch` | Six unpinned threads at three priorities each load their own pattern into s0-s31 and the FPSCR flags, spin long enough to be preempted (and, on SMP, moved to the other core), and check the registers read back unchanged. Needs an FPU; without one it passes with nothing to test. |
+| `fp-switch` | Six unpinned threads at three priorities each load their own pattern into s0-s31 and the FPSCR flags, spin long enough to be preempted (and, on SMP, moved to the other core), and check the registers read back unchanged. On RISC-V with an FPU (`__riscv_flen`): f0-f31 (FLEN bits) and the fcsr.fflags, the hold calibrated to about 3 ticks, and on SMP at least one round must resume on another core. Needs an FPU; without one it passes with nothing to test. |
 | `cmsis-os-validator` | The Arm CMSIS-RTOS v1 validator (60 test cases: threads, timers, signals, semaphores, mutexes, memory pools, message and mail queues, with interrupt-context cases). On a Cortex-M the interrupt is NVIC IRQ 0; see below for the other cores. |
 | `blinky` | Blinks the LED. Enabled only on `nucleo-f411re` (`platforms/nucleo-f411re/cmake/definitions.cmake`), where it is the case `blinky-test`. |
 | `instrumentation` | SEGGER SystemView use cases. Enabled only on `nucleo-f411re`, which builds `instrumentation-test` and `rtos-apis-instrumentation-test` but registers no CTest case for them: they are run from SEGGER Ozone with a J-Link (see `tests/sources/instrumentation/README.md`). |
@@ -146,14 +147,19 @@ Where each suite runs:
 | `cortexm-weactf412` | hwd | hwd | hwd | SMP ×1 |
 | `native` | host (`rtos-apis`, single; `smp-rtos-apis`, SMP 4) | host (`mutex-stress`, single; `smp-mutex-stress`, SMP 4) | host | see §8 |
 | `riscv-milkv-duo` | qemu, hwd | qemu, hwd | qemu, hwd | single (`OS_NCPU=1`, scalar scheduler) |
+| `riscv-visionfive2-lite` | hwd | hwd | hwd | SMP 4 (the suite's `__wrap_os_main()` starts CPUs 1..3 first) |
 | `2xcortex-m33` | QEMU | QEMU | QEMU | SMP 2 |
 | `pico2-1cpu` | QEMU | QEMU | QEMU | single |
 | `qemu-cortex-m0/m3/m4f/m7f` | QEMU | QEMU | QEMU | single (local cortexm port's generic QEMU cores, `OS_NCPU=1`) |
 | `nucleo-*`, `raspberrypi-pico` | yes | yes | yes | single (upstream); `nucleo-f411re` adds `blinky-test` |
 
 `fp-switch` runs where an M33 FPU does: `cortexm-pico2` (qemu, hwd),
-`2xcortex-m33` (QEMU, SMP 2) and `pico2-1cpu` (QEMU, single). On
-`cortexm-pico` (Cortex-M0+, no FPU) it builds and passes with nothing to test.
+`2xcortex-m33` (QEMU, SMP 2) and `pico2-1cpu` (QEMU, single), and on the
+RISC-V boards with an FPU: `riscv-visionfive2-lite` (hwd, SMP 4; 2026-11-07:
+3894 rounds, 0 bad, 860 migrated) and `riscv-milkv-duo` (qemu, hwd, single).
+Until 2026-11-07 the suite had an Arm path only, and on RISC-V it passed
+with nothing to test. On `cortexm-pico` (Cortex-M0+, no FPU) and
+`riscv-pico2` (Hazard3, no FPU) it builds and passes with nothing to test.
 
 On `cortexm-pico2` the `-qemu` image of a suite does not run the board at
 all: QEMU has no RP2350, so the image links the generic single-core
