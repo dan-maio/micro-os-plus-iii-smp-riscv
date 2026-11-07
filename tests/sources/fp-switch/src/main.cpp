@@ -256,7 +256,9 @@ os_main (int argc __attribute__ ((unused)),
         const auto t0 = sysclock.now ();
         hold_fp_registers (in, out, 0);
         const auto dt = sysclock.now () - t0;
-        if (dt >= 8 || n > (1ul << 40))
+        // The cap keeps n * 4 (and n * hold_ticks) inside unsigned long:
+        // 1ul << 40 was undefined on RV32, where unsigned long is 32 bits.
+        if (dt >= 8 || n > (~0ul / 16u))
           {
             spin_n = (n * hold_ticks) / (dt != 0 ? dt : 1);
             if (spin_n == 0)
