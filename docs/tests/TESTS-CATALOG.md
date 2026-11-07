@@ -64,7 +64,7 @@ semihosting and mirrored on the UART.
 | `cortexm-weactf412` | cortexm | WeAct Studio F412RE | 1× Cortex-M4F | 1 | hwd only (SRAM 256K > QEMU 128K) | ST-Link |
 | `native` | posix-arch | the Linux host | host threads as CPUs | 4 (`-DNCPU`) | host | — |
 | `riscv-milkv-duo` | riscv | Milk-V Duo 64 MB (CV1800B) | 1× T-Head C906, RV64GC, M-mode | 1 | qemu (QEMU `virt`, 14 tests), hwd (loaded into DDR over JTAG, warm reset between tests) | SIPEED RV CMSIS-DAP `d6e7:3507` |
-| `riscv-visionfive2-lite` | riscv | StarFive VisionFive 2 Lite (JH-7110S) | 4× SiFive U74, RV64GC, M-mode (+ an S7 monitor core, not used) | 4 | hwd only (19: 13 board tests -- emmc-probe and emmc-fs-test use the eMMC area after the Linux partitions -- + 6 suites, loaded into DDR over JTAG from the U-Boot prompt) | JTAG probe on Pico CMSIS-DAP `2e8a:000c` (or DAPLink `0d28:0204`) |
+| `riscv-visionfive2-lite` | riscv | StarFive VisionFive 2 Lite (JH-7110S) | 4× SiFive U74, RV64GC, M-mode (+ an S7 monitor core, not used) | 4 | hwd only (21: 15 board tests -- emmc-probe and emmc-fs-test use the eMMC area after the Linux partitions; smp-test-usb-cdc-acm and smp-test-usb-cdc-file need their PC side, usb-host.py / usb-file-host.py -- + 6 suites, loaded into DDR over JTAG from the U-Boot prompt) | JTAG probe on Pico CMSIS-DAP `2e8a:000c` (or DAPLink `0d28:0204`) |
 | `2xcortex-m33` | cortexm | QEMU `mps2-an521` | 2× Cortex-M33 | 2 | QEMU | — |
 | `pico2-1cpu` | cortexm | QEMU `mps2-an505` | 1× Cortex-M33 | 1 | QEMU | — |
 | `qemu-cortex-m0` | cortexm | QEMU `mps2-an385` | Cortex-M3 (the platform passes `--cpu cortex-m3`, not an M0) | 1 | QEMU | — |
