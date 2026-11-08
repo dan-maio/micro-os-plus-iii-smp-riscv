@@ -2326,6 +2326,47 @@
           "test-hwd-all": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && BUILD={{ properties.buildFolderRelativePath }}/platform-bin/port-tests bash ../../micro-os-plus-iii-riscv/test/boards/milkv-duo/hw-all.sh"
         }
       },
+      "riscv-mangopi-mq-pro-cmake-gcc-debug": {
+        "inherit": [
+          "riscv-actions",
+          "cmake-actions",
+          "riscv-none-elf-gcc-dependencies",
+          "qemu-riscv-dependencies",
+          "short-win-paths-properties"
+        ],
+        "properties": {
+          "buildType": "Debug",
+          "platformName": "riscv-mangopi-mq-pro",
+          "toolchainFileName": "riscv-none-elf-gcc.cmake",
+          "shortConfigurationName": "mqpd"
+        },
+        "actions": {
+          "test": "cd {{ properties.buildFolderRelativePath }} && ctest -V -LE hwd",
+          "test-hwd": "cd {{ properties.buildFolderRelativePath }} && ctest -V -L hwd",
+          "test-blinky-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-mangopi-mq-pro-blinky-qemu",
+          "test-blinky-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-mangopi-mq-pro-blinky-hwd",
+          "test-fp-switch-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-mangopi-mq-pro-fp-switch-qemu",
+          "test-fp-switch-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-mangopi-mq-pro-fp-switch-hwd",
+          "test-mutex-stress-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-mangopi-mq-pro-mutex-stress-qemu",
+          "test-mutex-stress-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-mangopi-mq-pro-mutex-stress-hwd",
+          "test-instrumentation-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-mangopi-mq-pro-instrumentation-qemu",
+          "test-instrumentation-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-mangopi-mq-pro-instrumentation-hwd",
+          "test-rtos-apis-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-mangopi-mq-pro-rtos-apis-qemu",
+          "test-rtos-apis-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-mangopi-mq-pro-rtos-apis-hwd",
+          "test-cmsis-os-validator-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-mangopi-mq-pro-cmsis-os-validator-qemu",
+          "test-cmsis-os-validator-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-mangopi-mq-pro-cmsis-os-validator-hwd",
+          "test-hwd-all": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && BUILD={{ properties.buildFolderRelativePath }}/platform-bin/port-tests bash ../../micro-os-plus-iii-riscv/test/boards/mangopi-mq-pro/hw-all.sh"
+        }
+      },
+      "riscv-mangopi-mq-pro-cmake-gcc-release": {
+        "inherit": [
+          "riscv-mangopi-mq-pro-cmake-gcc-debug"
+        ],
+        "properties": {
+          "buildType": "Release",
+          "shortConfigurationName": "mqpr"
+        }
+      },
       "riscv-visionfive2-lite-cmake-gcc-debug": {
         "inherit": [
           "riscv-actions",
