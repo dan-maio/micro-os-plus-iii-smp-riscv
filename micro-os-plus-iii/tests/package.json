@@ -1,0 +1,2600 @@
+{
+  "name": "tests",
+  "version": "0.0.0",
+  "description": "Tests",
+  "license": "MIT",
+  "author": {
+    "name": "Liviu Ionescu",
+    "email": "ilg@livius.net",
+    "url": "https://github.com/ilg-ul"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "del-cli": "^5.0.0"
+  },
+  "scripts": {
+    "npm-install": "npm install",
+    "deep-clean": "del-cli build node_modules xpacks package-json.json"
+  },
+  "xpack": {
+    "minimumXpmRequired": "0.20.8",
+    "dependencies": {},
+    "$devDependenciesUrls": [
+      "https://github.com/micro-os-plus",
+      "https://github.com/xpacks",
+      "https://github.com/xpack-dev-tools"
+    ],
+    "devDependencies": {
+      "@xpack-dev-tools/cmake": "3.26.5-1.1",
+      "@xpack-dev-tools/ninja-build": "1.11.1-3.1",
+      "@micro-os-plus/build-helper": {
+        "specifier": "^2.17.0",
+        "local": "link",
+        "platforms": "all"
+      },
+      "@xpacks/arm-cmsis-rtos-validator": {
+        "specifier": "github:xpacks/arm-cmsis-rtos-validator#v1.0.0-4",
+        "local": "link",
+        "platforms": "all"
+      },
+      "@xpacks/chan-fatfs": {
+        "specifier": "github:xpacks/chan-fatfs#v0.13.1-5",
+        "local": "link",
+        "platforms": "all"
+      }
+    },
+    "properties": {
+      "buildFolderRelativePath": "{{ 'build' | path_join: configuration.name | to_filename | downcase }}",
+      "buildFolderRelativePathPosix": "{{ 'build' | path_posix_join: configuration.name | downcase }}",
+      "commandCMakePrepare": "{{ properties.commandCMakeReconfigure }} --log-level=VERBOSE",
+      "commandCMakePrepareWithToolchain": "{{ properties.commandCMakePrepare }} -D CMAKE_TOOLCHAIN_FILE=xpacks/@micro-os-plus/build-helper/cmake/toolchains/{{ properties.toolchainFileName }}",
+      "commandCMakeReconfigure": "cmake -S . -B {{ properties.buildFolderRelativePathPosix }} -G Ninja -D CMAKE_BUILD_TYPE={{ properties.buildType }} -D PLATFORM_NAME={{ properties.platformName }}",
+      "commandCMakeBuild": "cmake --build {{ properties.buildFolderRelativePathPosix }}",
+      "commandCMakeBuildVerbose": "cmake --build {{ properties.buildFolderRelativePathPosix }} --verbose",
+      "commandCMakeClean": "cmake --build {{ properties.buildFolderRelativePathPosix }} --target clean",
+      "commandCMakePerformTests": "cd {{ properties.buildFolderRelativePath }} && ctest -V"
+    },
+    "actions": {
+      "deep-clean": "del-cli build node_modules xpacks package-lock.json",
+      "git-clone-deps": [
+        "rm -rf ${HOME}/Work/micro-os-plus/build-helper-xpack.git",
+        "git clone --branch xpack-development https://github.com/micro-os-plus/build-helper-xpack.git ${HOME}/Work/micro-os-plus/build-helper-xpack.git",
+        "xpm link -C ${HOME}/Work/micro-os-plus/build-helper-xpack.git",
+        "rm -rf ${HOME}/Work/micro-os-plus/micro-os-plus-iii-posix-arch-xpack.git",
+        "git clone --branch xpack-development https://github.com/micro-os-plus/micro-os-plus-iii-posix-arch.git ${HOME}/Work/micro-os-plus/micro-os-plus-iii-posix-arch.git",
+        "xpm link -C ${HOME}/Work/micro-os-plus/micro-os-plus-iii-posix-arch.git",
+        "rm -rf ${HOME}/Work/micro-os-plus/micro-os-plus-iii-cortexm.git",
+        "git clone --branch xpack-development https://github.com/micro-os-plus/micro-os-plus-iii-cortexm.git ${HOME}/Work/micro-os-plus/micro-os-plus-iii-cortexm.git",
+        "xpm link -C ${HOME}/Work/micro-os-plus/micro-os-plus-iii-cortexm.git",
+        "rm -rf ${HOME}/Work/micro-os-plus-iii/arm-cmsis-rtos-validator-xpack.git",
+        "git clone --branch xpack-development https://github.com/xpacks/arm-cmsis-rtos-validator.git ${HOME}/Work/micro-os-plus-iii/arm-cmsis-rtos-validator.git",
+        "xpm link -C ${HOME}/Work/micro-os-plus-iii/arm-cmsis-rtos-validator.git",
+        "rm -rf ${HOME}/Work/micro-os-plus-iii/chan-fatfs-xpack.git",
+        "git clone --branch xpack-development https://github.com/xpacks/chan-fatfs.git ${HOME}/Work/micro-os-plus-iii/chan-fatfs.git",
+        "xpm link -C ${HOME}/Work/micro-os-plus-iii/chan-fatfs.git",
+        "rm -rf ${HOME}/Work/micro-os-plus-iii/arm-cmsis-xpack.git",
+        "git clone --branch xpack-development https://github.com/xpacks/arm-cmsis.git ${HOME}/Work/micro-os-plus-iii/arm-cmsis.git",
+        "xpm link -C ${HOME}/Work/micro-os-plus-iii/arm-cmsis.git",
+        "rm -rf ${HOME}/Work/xpack-3rd-party/libucontext-xpack.git",
+        "git clone --branch xpack-development https://github.com/xpack-3rd-party/libucontext-xpack.git ${HOME}/Work/xpack-3rd-party/libucontext-xpack.git",
+        "xpm link -C ${HOME}/Work/xpack-3rd-party/libucontext-xpack.git",
+        "rm -rf ${HOME}/Work/xpack-3rd-party/raspberrypi-pico-sdk-xpack.git",
+        "git clone --branch xpack-development https://github.com/xpack-3rd-party/raspberrypi-pico-sdk-xpack.git ${HOME}/Work/xpack-3rd-party/raspberrypi-pico-sdk-xpack.git",
+        "xpm link -C ${HOME}/Work/xpack-3rd-party/raspberrypi-pico-sdk-xpack.git"
+      ],
+      "git-status-deps": [
+        "git -C ${HOME}/Work/micro-os-plus/build-helper-xpack.git status",
+        "git -C ${HOME}/Work/micro-os-plus/micro-os-plus-iii-posix-arch.git status",
+        "git -C ${HOME}/Work/micro-os-plus/micro-os-plus-iii-cortexm.git status",
+        "git -C ${HOME}/Work/micro-os-plus-iii/arm-cmsis-rtos-validator.git status",
+        "git -C ${HOME}/Work/micro-os-plus-iii/chan-fatfs.git status",
+        "git -C ${HOME}/Work/micro-os-plus-iii/arm-cmsis.git status",
+        "git -C ${HOME}/Work/xpack-3rd-party/libucontext-xpack.git status",
+        "git -C ${HOME}/Work/xpack-3rd-party/raspberrypi-pico-sdk-xpack.git status"
+      ],
+      "git-pull-deps": [
+        "git -C ${HOME}/Work/micro-os-plus/build-helper-xpack.git pull",
+        "git -C ${HOME}/Work/micro-os-plus/micro-os-plus-iii-posix-arch.git pull",
+        "git -C ${HOME}/Work/micro-os-plus/micro-os-plus-iii-cortexm.git pull",
+        "git -C ${HOME}/Work/micro-os-plus-iii/arm-cmsis-rtos-validator.git pull",
+        "git -C ${HOME}/Work/micro-os-plus-iii/chan-fatfs.git pull",
+        "git -C ${HOME}/Work/micro-os-plus-iii/arm-cmsis.git pull",
+        "git -C ${HOME}/Work/xpack-3rd-party/libucontext-xpack.git pull",
+        "git -C ${HOME}/Work/xpack-3rd-party/raspberrypi-pico-sdk-xpack.git pull"
+      ],
+      "install": [
+        "xpm install",
+        "xpm install --config qemu-cortex-m7f-cmake-gcc-debug",
+        "xpm install --config qemu-cortex-m7f-cmake-gcc-release"
+      ],
+      "link-deps": [
+        "xpm link @micro-os-plus/build-helper",
+        "xpm link @xpacks/arm-cmsis-rtos-validator",
+        "xpm link @xpacks/chan-fatfs"
+      ],
+      "test": [
+        "xpm run test-qemu-cortex-m7f-cmake"
+      ],
+      "install-ci": [
+        "xpm install",
+        "{% if os.platform == 'linux' %}xpm install --config native-cmake-gcc-debug{% endif %}",
+        "{% if os.platform == 'linux' or os.platform == 'darwin' %}xpm install --config native-cmake-clang-debug{% endif %}",
+        "xpm install --config qemu-cortex-m0-cmake-gcc-debug",
+        "xpm install --config qemu-cortex-m3-cmake-gcc-debug",
+        "xpm install --config qemu-cortex-m7f-cmake-gcc-debug"
+      ],
+      "test-ci": [
+        "{% if os.platform == 'linux' %}xpm run test-native-cmake-sys{% endif %}",
+        "xpm run test-qemu-cortex-m0-cmake",
+        "xpm run test-qemu-cortex-m3-cmake",
+        "xpm run test-qemu-cortex-m7f-cmake"
+      ],
+      "test-smp-cmake": [
+        "xpm run test-aarch32-rpi-zero-2w-cmake",
+        "xpm run test-aarch32-rpi3b-cmake",
+        "xpm run test-aarch64-rpi-zero-2w-cmake",
+        "xpm run test-aarch64-rpi3b-cmake",
+        "xpm run test-2xcortex-m33-cmake",
+        "xpm run test-pico2-1cpu-cmake",
+        "xpm run test-cortexm-pico2-cmake",
+        "xpm run test-cortexm-pico2-rp2350b-psram-cmake"
+      ],
+      "install-qemu-cortex-latest": [
+        "xpm install",
+        "xpm install --config qemu-cortex-m0-cmake-gcc-debug",
+        "xpm install --config qemu-cortex-m0-cmake-gcc-release",
+        "xpm install --config qemu-cortex-m3-cmake-gcc-debug",
+        "xpm install --config qemu-cortex-m3-cmake-gcc-release",
+        "xpm install --config qemu-cortex-m4f-cmake-gcc-debug",
+        "xpm install --config qemu-cortex-m4f-cmake-gcc-release",
+        "xpm install --config qemu-cortex-m7f-cmake-gcc-debug",
+        "xpm install --config qemu-cortex-m7f-cmake-gcc-release"
+      ],
+      "run-qemu-cortex-latest": [
+        "xpm run test-qemu-cortex-m0-cmake",
+        "xpm run test-qemu-cortex-m3-cmake",
+        "xpm run test-qemu-cortex-m4f-cmake",
+        "xpm run test-qemu-cortex-m7f-cmake"
+      ],
+      "install-all": [
+        "npm install",
+        "xpm install --all-configs"
+      ],
+      "link-deps-all": [
+        "xpm run link-deps",
+        "xpm run link-deps --config native-cmake-sys-debug",
+        "xpm run link-deps --config native-cmake-sys-release",
+        "xpm run link-deps --config native-cmake-gcc-debug",
+        "xpm run link-deps --config native-cmake-gcc-release",
+        "xpm run link-deps --config native-cmake-gcc11-debug",
+        "xpm run link-deps --config native-cmake-gcc11-release",
+        "xpm run link-deps --config native-cmake-gcc12-debug",
+        "xpm run link-deps --config native-cmake-gcc12-release",
+        "xpm run link-deps --config native-cmake-gcc13-debug",
+        "xpm run link-deps --config native-cmake-gcc13-release",
+        "xpm run link-deps --config native-cmake-gcc13-debug",
+        "xpm run link-deps --config native-cmake-gcc14-release",
+        "xpm run link-deps --config native-cmake-clang-debug",
+        "xpm run link-deps --config native-cmake-clang-release",
+        "xpm run link-deps --config native-cmake-clang13-debug",
+        "xpm run link-deps --config native-cmake-clang13-release",
+        "xpm run link-deps --config native-cmake-clang14-debug",
+        "xpm run link-deps --config native-cmake-clang14-release",
+        "xpm run link-deps --config native-cmake-clang15-debug",
+        "xpm run link-deps --config native-cmake-clang15-release",
+        "xpm run link-deps --config native-cmake-clang16-debug",
+        "xpm run link-deps --config native-cmake-clang16-release",
+        "xpm run link-deps --config native-cmake-clang17-debug",
+        "xpm run link-deps --config native-cmake-clang17-release",
+        "xpm run link-deps --config native-cmake-clang18-debug",
+        "xpm run link-deps --config native-cmake-clang18-release",
+        "xpm run link-deps --config native-cmake-clang19-debug",
+        "xpm run link-deps --config native-cmake-clang19-release",
+        "xpm run link-deps --config qemu-cortex-m0-cmake-gcc-debug",
+        "xpm run link-deps --config qemu-cortex-m0-cmake-gcc-release",
+        "xpm run link-deps --config qemu-cortex-m3-cmake-gcc-debug",
+        "xpm run link-deps --config qemu-cortex-m3-cmake-gcc-release",
+        "xpm run link-deps --config qemu-cortex-m4f-cmake-gcc-debug",
+        "xpm run link-deps --config qemu-cortex-m4f-cmake-gcc-release",
+        "xpm run link-deps --config qemu-cortex-m7f-cmake-gcc-debug",
+        "xpm run link-deps --config qemu-cortex-m7f-cmake-gcc-release",
+        "xpm run link-deps --config raspberrypi-pico-cmake-gcc-debug",
+        "xpm run link-deps --config raspberrypi-pico-cmake-gcc-release",
+        "xpm run link-deps --config nucleo-f411re-cmake-gcc-debug",
+        "xpm run link-deps --config nucleo-f411re-cmake-gcc-release",
+        "xpm run link-deps --config nucleo-f767zi-cmake-gcc-debug",
+        "xpm run link-deps --config nucleo-f767zi-cmake-gcc-release",
+        "xpm run link-deps --config nucleo-h743zi-cmake-gcc-debug",
+        "xpm run link-deps --config nucleo-h743zi-cmake-gcc-release",
+        "xpm run link-deps --config aarch32-rpi-zero-2w-cmake-gcc-debug",
+        "xpm run link-deps --config aarch32-rpi-zero-2w-cmake-gcc-release",
+        "xpm run link-deps --config aarch32-rpi3b-cmake-gcc-debug",
+        "xpm run link-deps --config aarch32-rpi3b-cmake-gcc-release",
+        "xpm run link-deps --config aarch32-luckfox-lyra-cmake-gcc-debug",
+        "xpm run link-deps --config aarch32-luckfox-lyra-cmake-gcc-release",
+        "xpm run link-deps --config aarch64-rpi-zero-2w-cmake-gcc-debug",
+        "xpm run link-deps --config aarch64-rpi-zero-2w-cmake-gcc-release",
+        "xpm run link-deps --config aarch64-rpi3b-cmake-gcc-debug",
+        "xpm run link-deps --config aarch64-rpi3b-cmake-gcc-release"
+      ],
+      "test-all": [
+        "xpm run test-native-cmake",
+        "xpm run test-cortex-cmake",
+        "xpm run test-smp-cmake"
+      ],
+      "clean-all": [
+        "xpm run clean --all-configs --ignore-errors"
+      ],
+      "test-native-cmake": [
+        "{% if os.platform == 'darwin' %}xpm run test-native-cmake-sys{% endif %}",
+        "{% if os.platform != 'darwin' %}xpm run test-native-cmake-gcc11{% endif %}",
+        "{% if os.platform != 'darwin' %}xpm run test-native-cmake-gcc12{% endif %}",
+        "{% if os.platform != 'darwin' %}xpm run test-native-cmake-gcc13{% endif %}",
+        "{% if os.platform != 'darwin' %}xpm run test-native-cmake-gcc14{% endif %}",
+        "echo xpm run test-native-cmake-clang13",
+        "echo xpm run test-native-cmake-clang14",
+        "echo xpm run test-native-cmake-clang15",
+        "xpm run test-native-cmake-clang16",
+        "xpm run test-native-cmake-clang17",
+        "xpm run test-native-cmake-clang18",
+        "xpm run test-native-cmake-clang19"
+      ],
+      "install-native-cmake-sys": [
+        "xpm install --config native-cmake-sys-debug",
+        "xpm install --config native-cmake-sys-release"
+      ],
+      "test-native-cmake-sys": [
+        "xpm run prepare --config native-cmake-sys-debug",
+        "xpm run build --config native-cmake-sys-debug",
+        "xpm run test --config native-cmake-sys-debug",
+        "xpm run prepare --config native-cmake-sys-release",
+        "xpm run build --config native-cmake-sys-release",
+        "xpm run test --config native-cmake-sys-release"
+      ],
+      "test-native-cmake-gcc": [
+        "xpm run prepare --config native-cmake-gcc-debug",
+        "xpm run build --config native-cmake-gcc-debug",
+        "xpm run test --config native-cmake-gcc-debug",
+        "xpm run prepare --config native-cmake-gcc-release",
+        "xpm run build --config native-cmake-gcc-release",
+        "xpm run test --config native-cmake-gcc-release"
+      ],
+      "test-native-cmake-gcc11": [
+        "xpm run prepare --config native-cmake-gcc11-debug",
+        "xpm run build --config native-cmake-gcc11-debug",
+        "xpm run test --config native-cmake-gcc11-debug",
+        "xpm run prepare --config native-cmake-gcc11-release",
+        "xpm run build --config native-cmake-gcc11-release",
+        "xpm run test --config native-cmake-gcc11-release"
+      ],
+      "test-native-cmake-gcc12": [
+        "xpm run prepare --config native-cmake-gcc12-debug",
+        "xpm run build --config native-cmake-gcc12-debug",
+        "xpm run test --config native-cmake-gcc12-debug",
+        "xpm run prepare --config native-cmake-gcc12-release",
+        "xpm run build --config native-cmake-gcc12-release",
+        "xpm run test --config native-cmake-gcc12-release"
+      ],
+      "test-native-cmake-gcc13": [
+        "xpm run prepare --config native-cmake-gcc13-debug",
+        "xpm run build --config native-cmake-gcc13-debug",
+        "xpm run test --config native-cmake-gcc13-debug",
+        "xpm run prepare --config native-cmake-gcc13-release",
+        "xpm run build --config native-cmake-gcc13-release",
+        "xpm run test --config native-cmake-gcc13-release"
+      ],
+      "test-native-cmake-gcc14": [
+        "xpm run prepare --config native-cmake-gcc14-debug",
+        "xpm run build --config native-cmake-gcc14-debug",
+        "xpm run test --config native-cmake-gcc14-debug",
+        "xpm run prepare --config native-cmake-gcc14-release",
+        "xpm run build --config native-cmake-gcc14-release",
+        "xpm run test --config native-cmake-gcc14-release"
+      ],
+      "test-native-cmake-clang": [
+        "xpm run prepare --config native-cmake-clang-debug",
+        "xpm run build --config native-cmake-clang-debug",
+        "xpm run test --config native-cmake-clang-debug",
+        "xpm run prepare --config native-cmake-clang-release",
+        "xpm run build --config native-cmake-clang-release",
+        "xpm run test --config native-cmake-clang-release"
+      ],
+      "test-native-cmake-clang13": [
+        "xpm run prepare --config native-cmake-clang13-debug",
+        "xpm run build --config native-cmake-clang13-debug",
+        "xpm run test --config native-cmake-clang13-debug",
+        "xpm run prepare --config native-cmake-clang13-release",
+        "xpm run build --config native-cmake-clang13-release",
+        "xpm run test --config native-cmake-clang13-release"
+      ],
+      "test-native-cmake-clang14": [
+        "xpm run prepare --config native-cmake-clang14-debug",
+        "xpm run build --config native-cmake-clang14-debug",
+        "xpm run test --config native-cmake-clang14-debug",
+        "xpm run prepare --config native-cmake-clang14-release",
+        "xpm run build --config native-cmake-clang14-release",
+        "xpm run test --config native-cmake-clang14-release"
+      ],
+      "test-native-cmake-clang15": [
+        "xpm run prepare --config native-cmake-clang15-debug",
+        "xpm run build --config native-cmake-clang15-debug",
+        "xpm run test --config native-cmake-clang15-debug",
+        "xpm run prepare --config native-cmake-clang15-release",
+        "xpm run build --config native-cmake-clang15-release",
+        "xpm run test --config native-cmake-clang15-release"
+      ],
+      "test-native-cmake-clang16": [
+        "xpm run prepare --config native-cmake-clang16-debug",
+        "xpm run build --config native-cmake-clang16-debug",
+        "xpm run test --config native-cmake-clang16-debug",
+        "xpm run prepare --config native-cmake-clang16-release",
+        "xpm run build --config native-cmake-clang16-release",
+        "xpm run test --config native-cmake-clang16-release"
+      ],
+      "test-native-cmake-clang17": [
+        "xpm run prepare --config native-cmake-clang17-debug",
+        "xpm run build --config native-cmake-clang17-debug",
+        "xpm run test --config native-cmake-clang17-debug",
+        "xpm run prepare --config native-cmake-clang17-release",
+        "xpm run build --config native-cmake-clang17-release",
+        "xpm run test --config native-cmake-clang17-release"
+      ],
+      "test-native-cmake-clang18": [
+        "xpm run prepare --config native-cmake-clang18-debug",
+        "xpm run build --config native-cmake-clang18-debug",
+        "xpm run test --config native-cmake-clang18-debug",
+        "xpm run prepare --config native-cmake-clang18-release",
+        "xpm run build --config native-cmake-clang18-release",
+        "xpm run test --config native-cmake-clang18-release"
+      ],
+      "test-native-cmake-clang19": [
+        "xpm run prepare --config native-cmake-clang19-debug",
+        "xpm run build --config native-cmake-clang19-debug",
+        "xpm run test --config native-cmake-clang19-debug",
+        "xpm run prepare --config native-cmake-clang19-release",
+        "xpm run build --config native-cmake-clang19-release",
+        "xpm run test --config native-cmake-clang19-release"
+      ],
+      "test-cortex-cmake": [
+        "xpm run test-qemu-cortex-m0-cmake",
+        "xpm run test-qemu-cortex-m3-cmake",
+        "xpm run test-qemu-cortex-m4f-cmake",
+        "xpm run test-qemu-cortex-m7f-cmake"
+      ],
+      "test-qemu-cortex-m0-cmake": [
+        "xpm run prepare --config qemu-cortex-m0-cmake-gcc-debug",
+        "xpm run build --config qemu-cortex-m0-cmake-gcc-debug",
+        "xpm run test --config qemu-cortex-m0-cmake-gcc-debug",
+        "xpm run prepare --config qemu-cortex-m0-cmake-gcc-release",
+        "xpm run build --config qemu-cortex-m0-cmake-gcc-release",
+        "xpm run test --config qemu-cortex-m0-cmake-gcc-release"
+      ],
+      "test-qemu-cortex-m3-cmake": [
+        "xpm run prepare --config qemu-cortex-m3-cmake-gcc-debug",
+        "xpm run build --config qemu-cortex-m3-cmake-gcc-debug",
+        "xpm run test --config qemu-cortex-m3-cmake-gcc-debug",
+        "xpm run prepare --config qemu-cortex-m3-cmake-gcc-release",
+        "xpm run build --config qemu-cortex-m3-cmake-gcc-release",
+        "xpm run test --config qemu-cortex-m3-cmake-gcc-release"
+      ],
+      "test-qemu-cortex-m4f-cmake": [
+        "xpm run prepare --config qemu-cortex-m4f-cmake-gcc-debug",
+        "xpm run build --config qemu-cortex-m4f-cmake-gcc-debug",
+        "xpm run test --config qemu-cortex-m4f-cmake-gcc-debug",
+        "xpm run prepare --config qemu-cortex-m4f-cmake-gcc-release",
+        "xpm run build --config qemu-cortex-m4f-cmake-gcc-release",
+        "xpm run test --config qemu-cortex-m4f-cmake-gcc-release"
+      ],
+      "test-qemu-cortex-m7f-cmake": [
+        "xpm run prepare --config qemu-cortex-m7f-cmake-gcc-debug",
+        "xpm run build --config qemu-cortex-m7f-cmake-gcc-debug",
+        "xpm run test --config qemu-cortex-m7f-cmake-gcc-debug",
+        "xpm run prepare --config qemu-cortex-m7f-cmake-gcc-release",
+        "xpm run build --config qemu-cortex-m7f-cmake-gcc-release",
+        "xpm run test --config qemu-cortex-m7f-cmake-gcc-release"
+      ],
+      "test-raspberrypi-pico-cmake": [
+        "xpm run prepare --config raspberrypi-pico-cmake-gcc-debug",
+        "xpm run build --config raspberrypi-pico-cmake-gcc-debug",
+        "xpm run test --config raspberrypi-pico-cmake-gcc-debug",
+        "xpm run prepare --config raspberrypi-pico-cmake-gcc-release",
+        "xpm run build --config raspberrypi-pico-cmake-gcc-release",
+        "xpm run test --config raspberrypi-pico-cmake-gcc-release"
+      ],
+      "test-nucleo-f411re-cmake": [
+        "xpm run prepare --config nucleo-f411re-cmake-gcc-debug",
+        "xpm run build --config nucleo-f411re-cmake-gcc-debug",
+        "xpm run test --config nucleo-f411re-cmake-gcc-debug",
+        "xpm run prepare --config nucleo-f411re-cmake-gcc-release",
+        "xpm run build --config nucleo-f411re-cmake-gcc-release",
+        "xpm run test --config nucleo-f411re-cmake-gcc-release"
+      ],
+      "test-nucleo-f767zi-cmake": [
+        "xpm run prepare --config nucleo-f767zi-cmake-gcc-debug",
+        "xpm run build --config nucleo-f767zi-cmake-gcc-debug",
+        "xpm run test --config nucleo-f767zi-cmake-gcc-debug",
+        "xpm run prepare --config nucleo-f767zi-cmake-gcc-release",
+        "xpm run build --config nucleo-f767zi-cmake-gcc-release",
+        "xpm run test --config nucleo-f767zi-cmake-gcc-release"
+      ],
+      "test-nucleo-h743zi-cmake": [
+        "xpm run prepare --config nucleo-h743zi-cmake-gcc-debug",
+        "xpm run build --config nucleo-h743zi-cmake-gcc-debug",
+        "xpm run test --config nucleo-h743zi-cmake-gcc-debug",
+        "xpm run prepare --config nucleo-h743zi-cmake-gcc-release",
+        "xpm run build --config nucleo-h743zi-cmake-gcc-release",
+        "xpm run test --config nucleo-h743zi-cmake-gcc-release"
+      ],
+      "test-aarch32-rpi-zero-2w-cmake": [
+        "xpm run prepare --config aarch32-rpi-zero-2w-cmake-gcc-debug",
+        "xpm run build --config aarch32-rpi-zero-2w-cmake-gcc-debug",
+        "xpm run test --config aarch32-rpi-zero-2w-cmake-gcc-debug",
+        "xpm run prepare --config aarch32-rpi-zero-2w-cmake-gcc-release",
+        "xpm run build --config aarch32-rpi-zero-2w-cmake-gcc-release",
+        "xpm run test --config aarch32-rpi-zero-2w-cmake-gcc-release"
+      ],
+      "test-aarch64-rpi-zero-2w-cmake": [
+        "xpm run prepare --config aarch64-rpi-zero-2w-cmake-gcc-debug",
+        "xpm run build --config aarch64-rpi-zero-2w-cmake-gcc-debug",
+        "xpm run test --config aarch64-rpi-zero-2w-cmake-gcc-debug",
+        "xpm run prepare --config aarch64-rpi-zero-2w-cmake-gcc-release",
+        "xpm run build --config aarch64-rpi-zero-2w-cmake-gcc-release",
+        "xpm run test --config aarch64-rpi-zero-2w-cmake-gcc-release"
+      ],
+      "test-aarch32-rpi3b-cmake": [
+        "xpm run prepare --config aarch32-rpi3b-cmake-gcc-debug",
+        "xpm run build --config aarch32-rpi3b-cmake-gcc-debug",
+        "xpm run test --config aarch32-rpi3b-cmake-gcc-debug",
+        "xpm run prepare --config aarch32-rpi3b-cmake-gcc-release",
+        "xpm run build --config aarch32-rpi3b-cmake-gcc-release",
+        "xpm run test --config aarch32-rpi3b-cmake-gcc-release"
+      ],
+      "test-aarch64-rpi3b-cmake": [
+        "xpm run prepare --config aarch64-rpi3b-cmake-gcc-debug",
+        "xpm run build --config aarch64-rpi3b-cmake-gcc-debug",
+        "xpm run test --config aarch64-rpi3b-cmake-gcc-debug",
+        "xpm run prepare --config aarch64-rpi3b-cmake-gcc-release",
+        "xpm run build --config aarch64-rpi3b-cmake-gcc-release",
+        "xpm run test --config aarch64-rpi3b-cmake-gcc-release"
+      ],
+      "test-aarch64-rpi4b-cmake": [
+        "xpm run prepare --config aarch64-rpi4b-cmake-gcc-debug",
+        "xpm run build --config aarch64-rpi4b-cmake-gcc-debug",
+        "xpm run test --config aarch64-rpi4b-cmake-gcc-debug",
+        "xpm run prepare --config aarch64-rpi4b-cmake-gcc-release",
+        "xpm run build --config aarch64-rpi4b-cmake-gcc-release",
+        "xpm run test --config aarch64-rpi4b-cmake-gcc-release"
+      ],
+      "test-2xcortex-m33-cmake": [
+        "xpm run prepare --config 2xcortex-m33-cmake-gcc-debug",
+        "xpm run build --config 2xcortex-m33-cmake-gcc-debug",
+        "xpm run test --config 2xcortex-m33-cmake-gcc-debug",
+        "xpm run prepare --config 2xcortex-m33-cmake-gcc-release",
+        "xpm run build --config 2xcortex-m33-cmake-gcc-release",
+        "xpm run test --config 2xcortex-m33-cmake-gcc-release"
+      ],
+      "test-pico2-1cpu-cmake": [
+        "xpm run prepare --config pico2-1cpu-cmake-gcc-debug",
+        "xpm run build --config pico2-1cpu-cmake-gcc-debug",
+        "xpm run test --config pico2-1cpu-cmake-gcc-debug",
+        "xpm run prepare --config pico2-1cpu-cmake-gcc-release",
+        "xpm run build --config pico2-1cpu-cmake-gcc-release",
+        "xpm run test --config pico2-1cpu-cmake-gcc-release"
+      ],
+      "test-cortexm-pico2-cmake": [
+        "xpm run prepare --config cortexm-pico2-cmake-gcc-debug",
+        "xpm run build --config cortexm-pico2-cmake-gcc-debug",
+        "xpm run test --config cortexm-pico2-cmake-gcc-debug",
+        "xpm run prepare --config cortexm-pico2-cmake-gcc-release",
+        "xpm run build --config cortexm-pico2-cmake-gcc-release",
+        "xpm run test --config cortexm-pico2-cmake-gcc-release"
+      ],
+      "test-cortexm-pico-cmake": [
+        "xpm run prepare --config cortexm-pico-cmake-gcc-debug",
+        "xpm run build --config cortexm-pico-cmake-gcc-debug",
+        "xpm run test --config cortexm-pico-cmake-gcc-debug",
+        "xpm run prepare --config cortexm-pico-cmake-gcc-release",
+        "xpm run build --config cortexm-pico-cmake-gcc-release",
+        "xpm run test --config cortexm-pico-cmake-gcc-release"
+      ],
+      "test-cortexm-pico2-rp2350b-psram-cmake": [
+        "xpm run prepare --config cortexm-pico2-rp2350b-psram-cmake-gcc-debug",
+        "xpm run build --config cortexm-pico2-rp2350b-psram-cmake-gcc-debug",
+        "xpm run test --config cortexm-pico2-rp2350b-psram-cmake-gcc-debug",
+        "xpm run prepare --config cortexm-pico2-rp2350b-psram-cmake-gcc-release",
+        "xpm run build --config cortexm-pico2-rp2350b-psram-cmake-gcc-release",
+        "xpm run test --config cortexm-pico2-rp2350b-psram-cmake-gcc-release"
+      ],
+      "build-aarch32-luckfox-lyra-cmake": [
+        "xpm run prepare --config aarch32-luckfox-lyra-cmake-gcc-debug",
+        "xpm run build --config aarch32-luckfox-lyra-cmake-gcc-debug",
+        "xpm run prepare --config aarch32-luckfox-lyra-cmake-gcc-release",
+        "xpm run build --config aarch32-luckfox-lyra-cmake-gcc-release"
+      ],
+      "clean-native-cmake": [
+        "xpm run clean --config native-cmake-sys-debug --ignore-errors",
+        "xpm run clean --config native-cmake-sys-release --ignore-errors",
+        "xpm run clean --config native-cmake-gcc-debug --ignore-errors",
+        "xpm run clean --config native-cmake-gcc-release --ignore-errors",
+        "xpm run clean --config native-cmake-clang-debug --ignore-errors",
+        "xpm run clean --config native-cmake-clang-release --ignore-errors",
+        "xpm run clean --config native-cmake-gcc11-debug --ignore-errors",
+        "xpm run clean --config native-cmake-gcc11-release --ignore-errors",
+        "xpm run clean --config native-cmake-gcc12-debug --ignore-errors",
+        "xpm run clean --config native-cmake-gcc12-release --ignore-errors",
+        "xpm run clean --config native-cmake-gcc13-debug --ignore-errors",
+        "xpm run clean --config native-cmake-gcc13-release --ignore-errors",
+        "xpm run clean --config native-cmake-gcc14-debug --ignore-errors",
+        "xpm run clean --config native-cmake-gcc14-release --ignore-errors",
+        "xpm run clean --config native-cmake-clang13-debug --ignore-errors",
+        "xpm run clean --config native-cmake-clang13-release --ignore-errors",
+        "xpm run clean --config native-cmake-clang14-debug --ignore-errors",
+        "xpm run clean --config native-cmake-clang14-release --ignore-errors",
+        "xpm run clean --config native-cmake-clang15-debug --ignore-errors",
+        "xpm run clean --config native-cmake-clang15-release --ignore-errors",
+        "xpm run clean --config native-cmake-clang16-debug --ignore-errors",
+        "xpm run clean --config native-cmake-clang16-release --ignore-errors",
+        "xpm run clean --config native-cmake-clang17-debug --ignore-errors",
+        "xpm run clean --config native-cmake-clang17-release --ignore-errors",
+        "xpm run clean --config native-cmake-clang18-debug --ignore-errors",
+        "xpm run clean --config native-cmake-clang18-release --ignore-errors",
+        "xpm run clean --config native-cmake-clang19-debug --ignore-errors",
+        "xpm run clean --config native-cmake-clang19-release --ignore-errors"
+      ],
+      "clean-cortex-cmake": [
+        "xpm run clean --config qemu-cortex-m0-cmake-gcc-debug --ignore-errors",
+        "xpm run clean --config qemu-cortex-m0-cmake-gcc-release --ignore-errors",
+        "xpm run clean --config qemu-cortex-m3-cmake-gcc-debug --ignore-errors",
+        "xpm run clean --config qemu-cortex-m3-cmake-gcc-release --ignore-errors",
+        "xpm run clean --config qemu-cortex-m4f-cmake-gcc-debug --ignore-errors",
+        "xpm run clean --config qemu-cortex-m4f-cmake-gcc-release --ignore-errors",
+        "xpm run clean --config qemu-cortex-m7f-cmake-gcc-debug --ignore-errors",
+        "xpm run clean --config qemu-cortex-m7f-cmake-gcc-release --ignore-errors",
+        "xpm run clean --config raspberrypi-pico-cmake-gcc-debug --ignore-errors",
+        "xpm run clean --config raspberrypi-pico-cmake-gcc-release --ignore-errors",
+        "xpm run clean --config nucleo-f767zi-cmake-gcc-debug --ignore-errors",
+        "xpm run clean --config nucleo-f767zi-cmake-gcc-release --ignore-errors"
+      ]
+    },
+    "buildConfigurations": {
+      "cmake-actions": {
+        "hidden": true,
+        "actions": {
+          "prepare": "{{ properties.commandCMakePrepareWithToolchain }}",
+          "build": [
+            "{{ properties.commandCMakeReconfigure }}",
+            "{{ properties.commandCMakeBuild }}"
+          ],
+          "test": "{{ properties.commandCMakePerformTests }}",
+          "clean": "{{ properties.commandCMakeClean }}"
+        }
+      },
+      "native-actions": {
+        "hidden": true,
+        "actions": {
+          "install": [
+            "xpm install --config {{ configuration.name }}"
+          ],
+          "link-deps": [
+            "xpm link @micro-os-plus/micro-os-plus-iii-posix-arch --config {{ configuration.name }}",
+            "xpm link @xpack-3rd-party/libucontext --config {{ configuration.name }}"
+          ]
+        }
+      },
+      "cortexm-actions": {
+        "hidden": true,
+        "actions": {
+          "install": [
+            "xpm install --config {{ configuration.name }}"
+          ],
+          "link-deps": [
+            "xpm link @micro-os-plus/micro-os-plus-iii-cortexm --config {{ configuration.name }}",
+            "xpm link @xpacks/arm-cmsis --config {{ configuration.name }}"
+          ]
+        }
+      },
+      "native-dependencies": {
+        "hidden": true,
+        "devDependencies": {
+          "@micro-os-plus/posix-arch": {
+            "specifier": "github:micro-os-plus/micro-os-plus-iii-posix-arch#v1.0.1",
+            "local": "link",
+            "platforms": "all"
+          },
+          "@xpack-3rd-party/libucontext": {
+            "specifier": "github:xpack-3rd-party/libucontext-xpack#v1.2.0-5",
+            "local": "link",
+            "platforms": "all"
+          }
+        }
+      },
+      "cortexm-dependencies": {
+        "hidden": true,
+        "devDependencies": {
+          "@micro-os-plus/micro-os-plus-iii-cortexm": {
+            "specifier": "github:micro-os-plus/micro-os-plus-iii-cortexm#v1.1.0",
+            "local": "link",
+            "platforms": "all"
+          }
+        }
+      },
+      "arm-cmsis-dependencies": {
+        "hidden": true,
+        "devDependencies": {
+          "@xpacks/arm-cmsis": {
+            "specifier": "github:xpacks/arm-cmsis#v4.5.0-7",
+            "local": "link",
+            "platforms": "all"
+          }
+        }
+      },
+      "arm-cmsis-core-dependencies": {
+        "hidden": true,
+        "devDependencies": {
+          "@xpack-3rd-party/arm-cmsis-core": "5.4.0-6"
+        }
+      },
+      "arm-none-eabi-gcc-dependencies": {
+        "hidden": true,
+        "$devDependenciesUrl": "https://www.npmjs.com/package/@xpack-dev-tools/arm-none-eabi-gcc",
+        "devDependencies": {
+          "@xpack-dev-tools/arm-none-eabi-gcc": "15.2.1-1.1.1"
+        }
+      },
+      "gcc-latest-dependencies": {
+        "hidden": true,
+        "inherit": [
+          "gcc14-dependencies"
+        ]
+      },
+      "gcc11-dependencies": {
+        "hidden": true,
+        "$devDependenciesUrl": "https://www.npmjs.com/package/@xpack-dev-tools/gcc",
+        "devDependencies": {
+          "@xpack-dev-tools/gcc": {
+            "specifier": "11.5.0-2.1",
+            "platforms": "linux-x64,linux-arm64,win32-x64"
+          }
+        }
+      },
+      "gcc12-dependencies": {
+        "hidden": true,
+        "$devDependenciesUrl": "https://www.npmjs.com/package/@xpack-dev-tools/gcc",
+        "devDependencies": {
+          "@xpack-dev-tools/gcc": {
+            "specifier": "12.4.0-2.1",
+            "platforms": "linux-x64,linux-arm64,win32-x64"
+          }
+        }
+      },
+      "gcc13-dependencies": {
+        "hidden": true,
+        "$devDependenciesUrl": "https://www.npmjs.com/package/@xpack-dev-tools/gcc",
+        "devDependencies": {
+          "@xpack-dev-tools/gcc": {
+            "specifier": "13.3.0-2.1",
+            "platforms": "linux-x64,linux-arm64,win32-x64"
+          }
+        }
+      },
+      "gcc14-dependencies": {
+        "hidden": true,
+        "$devDependenciesUrl": "https://www.npmjs.com/package/@xpack-dev-tools/gcc",
+        "devDependencies": {
+          "@xpack-dev-tools/gcc": {
+            "specifier": "14.2.0-2.1",
+            "platforms": "linux-x64,linux-arm64,win32-x64"
+          }
+        }
+      },
+      "clang-latest-dependencies": {
+        "hidden": true,
+        "inherit": [
+          "clang19-dependencies"
+        ]
+      },
+      "clang13-dependencies": {
+        "hidden": true,
+        "$devDependenciesUrl": "https://www.npmjs.com/package/@xpack-dev-tools/clang",
+        "devDependencies": {
+          "@xpack-dev-tools/clang": "13.0.1-1.1"
+        }
+      },
+      "clang14-dependencies": {
+        "hidden": true,
+        "$devDependenciesUrl": "https://www.npmjs.com/package/@xpack-dev-tools/clang",
+        "devDependencies": {
+          "@xpack-dev-tools/clang": "14.0.6-2.1"
+        }
+      },
+      "clang15-dependencies": {
+        "hidden": true,
+        "$devDependenciesUrl": "https://www.npmjs.com/package/@xpack-dev-tools/clang",
+        "devDependencies": {
+          "@xpack-dev-tools/clang": "15.0.7-2.1"
+        }
+      },
+      "clang16-dependencies": {
+        "hidden": true,
+        "$devDependenciesUrl": "https://www.npmjs.com/package/@xpack-dev-tools/clang",
+        "devDependencies": {
+          "@xpack-dev-tools/clang": "16.0.6-1.1"
+        }
+      },
+      "clang17-dependencies": {
+        "hidden": true,
+        "$devDependenciesUrl": "https://www.npmjs.com/package/@xpack-dev-tools/clang",
+        "devDependencies": {
+          "@xpack-dev-tools/clang": "17.0.6-3.1"
+        }
+      },
+      "clang18-dependencies": {
+        "hidden": true,
+        "$devDependenciesUrl": "https://www.npmjs.com/package/@xpack-dev-tools/clang",
+        "devDependencies": {
+          "@xpack-dev-tools/clang": "18.1.8-2.1"
+        }
+      },
+      "clang19-dependencies": {
+        "hidden": true,
+        "$devDependenciesUrl": "https://www.npmjs.com/package/@xpack-dev-tools/clang",
+        "devDependencies": {
+          "@xpack-dev-tools/clang": "19.1.7-1.1"
+        }
+      },
+      "clang-gcc14-properties": {
+        "hidden": true,
+        "$comment": "clang < 19 cannot parse the libstdc++ of a newer host GCC (GCC 16: __builtin_popcountg); build against the xPack GCC 14 (gcc14-dependencies) instead.",
+        "properties": {
+          "clangGccToolchain": "${PWD}/{{ properties.buildFolderRelativePathPosix }}/xpacks/@xpack-dev-tools/gcc/.content",
+          "commandCMakePrepareWithToolchain": "{{ properties.commandCMakePrepare }} -D CMAKE_TOOLCHAIN_FILE=xpacks/@micro-os-plus/build-helper/cmake/toolchains/{{ properties.toolchainFileName }} -D CMAKE_C_FLAGS=--gcc-toolchain={{ properties.clangGccToolchain }} -D CMAKE_CXX_FLAGS=--gcc-toolchain={{ properties.clangGccToolchain }}"
+        }
+      },
+      "qemu-arm-dependencies": {
+        "hidden": true,
+        "$devDependenciesUrl": "https://www.npmjs.com/package/@xpack-dev-tools/qemu-arm",
+        "devDependencies": {
+          "@xpack-dev-tools/qemu-arm": "8.2.6-1.1"
+        }
+      },
+      "openocd-dependencies": {
+        "hidden": true,
+        "$devDependenciesUrl": "https://www.npmjs.com/package/@xpack-dev-tools/openocd",
+        "devDependencies": {
+          "@xpack-dev-tools/openocd": "0.12.0-6.1"
+        }
+      },
+      "aarch32-actions": {
+        "hidden": true,
+        "actions": {
+          "install": [
+            "xpm install --config {{ configuration.name }}",
+            "xpm link @micro-os-plus/micro-os-plus-iii-aarch32 --config {{ configuration.name }}"
+          ],
+          "link-deps": [
+            "xpm link @micro-os-plus/micro-os-plus-iii-aarch32 --config {{ configuration.name }}"
+          ]
+        }
+      },
+      "aarch32-dependencies": {
+        "hidden": true,
+        "$devDependenciesUrl": "https://www.npmjs.com/package/@xpack-dev-tools/arm-none-eabi-gcc",
+        "devDependencies": {
+          "@xpack-dev-tools/arm-none-eabi-gcc": "15.2.1-1.1.1",
+          "@xpack-dev-tools/qemu-arm": "9.2.4-1.1"
+        }
+      },
+      "aarch32-luckfox-lyra-dependencies": {
+        "hidden": true,
+        "$devDependenciesUrl": "https://www.npmjs.com/package/@xpack-dev-tools/arm-none-eabi-gcc",
+        "devDependencies": {
+          "@xpack-dev-tools/arm-none-eabi-gcc": "15.2.1-1.1.1",
+          "@xpack-dev-tools/openocd": "0.12.0-7.1"
+        }
+      },
+      "aarch64-actions": {
+        "hidden": true,
+        "actions": {
+          "install": [
+            "xpm install --config {{ configuration.name }}",
+            "xpm link @micro-os-plus/micro-os-plus-iii-aarch64 --config {{ configuration.name }}"
+          ],
+          "link-deps": [
+            "xpm link @micro-os-plus/micro-os-plus-iii-aarch64 --config {{ configuration.name }}"
+          ]
+        }
+      },
+      "aarch64-dependencies": {
+        "hidden": true,
+        "$devDependenciesUrl": "https://www.npmjs.com/package/@xpack-dev-tools/aarch64-none-elf-gcc",
+        "devDependencies": {
+          "@xpack-dev-tools/aarch64-none-elf-gcc": "15.2.1-1.1.1",
+          "@xpack-dev-tools/qemu-arm": "9.2.4-1.1"
+        }
+      },
+      "short-win-paths-properties": {
+        "hidden": true,
+        "properties": {
+          "buildFolderRelativePath": "{% if os.platform != 'win32' %}{{ 'build' | path_join: configuration.name | to_filename | downcase }}{% else %}{{ 'build' | path_join: properties.shortConfigurationName | to_filename | downcase }}{% endif %}",
+          "buildFolderRelativePathPosix": "{% if os.platform != 'win32' %}{{ 'build' | path_posix_join: configuration.name | downcase }}{% else %}{{ 'build' | path_posix_join: properties.shortConfigurationName | downcase }}{% endif %}"
+        }
+      },
+      "native-cmake-sys-debug": {
+        "inherit": [
+          "native-actions",
+          "cmake-actions",
+          "native-dependencies"
+        ],
+        "properties": {
+          "buildType": "Debug",
+          "platformName": "native"
+        },
+        "actions": {
+          "prepare": "{{ properties.commandCMakePrepare }}",
+          "test-cmsis-os-validator-host": "{{ properties.commandCMakePrepare }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R native-cmsis-os-validator-host",
+          "test-mutex-stress-host": "{{ properties.commandCMakePrepare }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R native-mutex-stress-host",
+          "test-rtos-apis-host": "{{ properties.commandCMakePrepare }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R native-rtos-apis-host",
+          "test-smp-mat-test-host": "{{ properties.commandCMakePrepare }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R native-smp-mat-test-host",
+          "test-smp-mutex-stress-host": "{{ properties.commandCMakePrepare }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R native-smp-mutex-stress-host",
+          "test-smp-num-test-host": "{{ properties.commandCMakePrepare }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R native-smp-num-test-host",
+          "test-flatfs-test-host": "{{ properties.commandCMakePrepare }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R native-flatfs-test-host",
+          "test-mutex-ceiling-test-host": "{{ properties.commandCMakePrepare }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R native-mutex-ceiling-test-host",
+          "test-smp-pipeline-test-host": "{{ properties.commandCMakePrepare }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R native-smp-pipeline-test-host",
+          "test-smp-pro-cons-test-host": "{{ properties.commandCMakePrepare }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R native-smp-pro-cons-test-host",
+          "test-smp-rtos-apis-host": "{{ properties.commandCMakePrepare }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R native-smp-rtos-apis-host",
+          "test-smp_test0-host": "{{ properties.commandCMakePrepare }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R native-smp_test0-host",
+          "test-smp_test1-host": "{{ properties.commandCMakePrepare }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R native-smp_test1-host",
+          "test-smp_test2-host": "{{ properties.commandCMakePrepare }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R native-smp_test2-host",
+          "test-smp_test3-host": "{{ properties.commandCMakePrepare }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R native-smp_test3-host",
+          "test-smp_test4-host": "{{ properties.commandCMakePrepare }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R native-smp_test4-host"
+        }
+      },
+      "native-cmake-sys-release": {
+        "inherit": [
+          "native-cmake-sys-debug"
+        ],
+        "properties": {
+          "buildType": "Release"
+        }
+      },
+      "native-cmake-gcc-debug": {
+        "inherit": [
+          "native-actions",
+          "cmake-actions",
+          "native-dependencies",
+          "gcc-latest-dependencies"
+        ],
+        "properties": {
+          "buildType": "Debug",
+          "platformName": "native",
+          "toolchainFileName": "gcc.cmake"
+        },
+        "actions": {
+          "test": "cd {{ properties.buildFolderRelativePath }} && ctest -V -LE hwd",
+          "test-cmsis-os-validator-host": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R native-cmsis-os-validator-host",
+          "test-mutex-stress-host": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R native-mutex-stress-host",
+          "test-rtos-apis-host": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R native-rtos-apis-host",
+          "test-smp-mat-test-host": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R native-smp-mat-test-host",
+          "test-smp-mutex-stress-host": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R native-smp-mutex-stress-host",
+          "test-smp-num-test-host": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R native-smp-num-test-host",
+          "test-flatfs-test-host": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R native-flatfs-test-host",
+          "test-mutex-ceiling-test-host": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R native-mutex-ceiling-test-host",
+          "test-smp-pipeline-test-host": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R native-smp-pipeline-test-host",
+          "test-smp-pro-cons-test-host": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R native-smp-pro-cons-test-host",
+          "test-smp-rtos-apis-host": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R native-smp-rtos-apis-host",
+          "test-smp_test0-host": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R native-smp_test0-host",
+          "test-smp_test1-host": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R native-smp_test1-host",
+          "test-smp_test2-host": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R native-smp_test2-host",
+          "test-smp_test3-host": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R native-smp_test3-host",
+          "test-smp_test4-host": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R native-smp_test4-host"
+        }
+      },
+      "native-cmake-gcc-release": {
+        "inherit": [
+          "native-cmake-gcc-debug"
+        ],
+        "properties": {
+          "buildType": "Release"
+        }
+      },
+      "native-cmake-gcc11-debug": {
+        "inherit": [
+          "native-actions",
+          "cmake-actions",
+          "native-dependencies",
+          "gcc11-dependencies"
+        ],
+        "properties": {
+          "buildType": "Debug",
+          "platformName": "native",
+          "toolchainFileName": "gcc.cmake"
+        }
+      },
+      "native-cmake-gcc11-release": {
+        "inherit": [
+          "native-cmake-gcc11-debug"
+        ],
+        "properties": {
+          "buildType": "Release"
+        }
+      },
+      "native-cmake-gcc12-debug": {
+        "inherit": [
+          "native-actions",
+          "cmake-actions",
+          "native-dependencies",
+          "gcc12-dependencies"
+        ],
+        "properties": {
+          "buildType": "Debug",
+          "platformName": "native",
+          "toolchainFileName": "gcc.cmake"
+        }
+      },
+      "native-cmake-gcc12-release": {
+        "inherit": [
+          "native-cmake-gcc12-debug"
+        ],
+        "properties": {
+          "buildType": "Release"
+        }
+      },
+      "native-cmake-gcc13-debug": {
+        "inherit": [
+          "native-actions",
+          "cmake-actions",
+          "native-dependencies",
+          "gcc13-dependencies"
+        ],
+        "properties": {
+          "buildType": "Debug",
+          "platformName": "native",
+          "toolchainFileName": "gcc.cmake"
+        }
+      },
+      "native-cmake-gcc13-release": {
+        "inherit": [
+          "native-cmake-gcc13-debug"
+        ],
+        "properties": {
+          "buildType": "Release"
+        }
+      },
+      "native-cmake-gcc14-debug": {
+        "inherit": [
+          "native-actions",
+          "cmake-actions",
+          "native-dependencies",
+          "gcc14-dependencies"
+        ],
+        "properties": {
+          "buildType": "Debug",
+          "platformName": "native",
+          "toolchainFileName": "gcc.cmake"
+        }
+      },
+      "native-cmake-gcc14-release": {
+        "inherit": [
+          "native-cmake-gcc14-debug"
+        ],
+        "properties": {
+          "buildType": "Release"
+        }
+      },
+      "native-cmake-clang-debug": {
+        "inherit": [
+          "native-actions",
+          "cmake-actions",
+          "native-dependencies",
+          "clang-latest-dependencies"
+        ],
+        "properties": {
+          "buildType": "Debug",
+          "platformName": "native",
+          "toolchainFileName": "clang.cmake"
+        }
+      },
+      "native-cmake-clang-release": {
+        "inherit": [
+          "native-cmake-clang-debug"
+        ],
+        "properties": {
+          "buildType": "Release"
+        }
+      },
+      "native-cmake-clang13-debug": {
+        "inherit": [
+          "native-actions",
+          "cmake-actions",
+          "native-dependencies",
+          "clang13-dependencies"
+        ],
+        "properties": {
+          "buildType": "Debug",
+          "platformName": "native",
+          "toolchainFileName": "clang.cmake"
+        }
+      },
+      "native-cmake-clang13-release": {
+        "inherit": [
+          "native-cmake-clang13-debug"
+        ],
+        "properties": {
+          "buildType": "Release"
+        }
+      },
+      "native-cmake-clang14-debug": {
+        "inherit": [
+          "native-actions",
+          "cmake-actions",
+          "native-dependencies",
+          "clang14-dependencies"
+        ],
+        "properties": {
+          "buildType": "Debug",
+          "platformName": "native",
+          "toolchainFileName": "clang.cmake"
+        }
+      },
+      "native-cmake-clang14-release": {
+        "inherit": [
+          "native-cmake-clang14-debug"
+        ],
+        "properties": {
+          "buildType": "Release"
+        }
+      },
+      "native-cmake-clang15-debug": {
+        "inherit": [
+          "native-actions",
+          "cmake-actions",
+          "native-dependencies",
+          "clang15-dependencies"
+        ],
+        "properties": {
+          "buildType": "Debug",
+          "platformName": "native",
+          "toolchainFileName": "clang.cmake"
+        }
+      },
+      "native-cmake-clang15-release": {
+        "inherit": [
+          "native-cmake-clang15-debug"
+        ],
+        "properties": {
+          "buildType": "Release"
+        }
+      },
+      "native-cmake-clang16-debug": {
+        "inherit": [
+          "native-actions",
+          "cmake-actions",
+          "native-dependencies",
+          "clang16-dependencies",
+          "gcc14-dependencies",
+          "clang-gcc14-properties"
+        ],
+        "properties": {
+          "buildType": "Debug",
+          "platformName": "native",
+          "toolchainFileName": "clang.cmake"
+        }
+      },
+      "native-cmake-clang16-release": {
+        "inherit": [
+          "native-cmake-clang16-debug"
+        ],
+        "properties": {
+          "buildType": "Release"
+        }
+      },
+      "native-cmake-clang17-debug": {
+        "inherit": [
+          "native-actions",
+          "cmake-actions",
+          "native-dependencies",
+          "clang17-dependencies",
+          "gcc14-dependencies",
+          "clang-gcc14-properties"
+        ],
+        "properties": {
+          "buildType": "Debug",
+          "platformName": "native",
+          "toolchainFileName": "clang.cmake"
+        }
+      },
+      "native-cmake-clang17-release": {
+        "inherit": [
+          "native-cmake-clang17-debug"
+        ],
+        "properties": {
+          "buildType": "Release"
+        }
+      },
+      "native-cmake-clang18-debug": {
+        "inherit": [
+          "native-actions",
+          "cmake-actions",
+          "native-dependencies",
+          "clang18-dependencies",
+          "gcc14-dependencies",
+          "clang-gcc14-properties"
+        ],
+        "properties": {
+          "buildType": "Debug",
+          "platformName": "native",
+          "toolchainFileName": "clang.cmake"
+        }
+      },
+      "native-cmake-clang18-release": {
+        "inherit": [
+          "native-cmake-clang18-debug"
+        ],
+        "properties": {
+          "buildType": "Release"
+        }
+      },
+      "native-cmake-clang19-debug": {
+        "inherit": [
+          "native-actions",
+          "cmake-actions",
+          "native-dependencies",
+          "clang19-dependencies"
+        ],
+        "properties": {
+          "buildType": "Debug",
+          "platformName": "native",
+          "toolchainFileName": "clang.cmake"
+        }
+      },
+      "native-cmake-clang19-release": {
+        "inherit": [
+          "native-cmake-clang19-debug"
+        ],
+        "properties": {
+          "buildType": "Release"
+        }
+      },
+      "qemu-cortex-m0-cmake-gcc-debug": {
+        "inherit": [
+          "cortexm-actions",
+          "cmake-actions",
+          "cortexm-dependencies",
+          "arm-cmsis-dependencies",
+          "arm-cmsis-core-dependencies",
+          "arm-none-eabi-gcc-dependencies",
+          "qemu-arm-dependencies",
+          "short-win-paths-properties"
+        ],
+        "properties": {
+          "buildType": "Debug",
+          "platformName": "qemu-cortex-m0",
+          "toolchainFileName": "arm-none-eabi-gcc.cmake",
+          "shortConfigurationName": "m0d"
+        },
+        "actions": {
+          "test": "cd {{ properties.buildFolderRelativePath }} && ctest -V -LE hwd",
+          "test-rtos-apis-test": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R qemu-cortex-m0-rtos-apis-test",
+          "test-mutex-stress-test": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R qemu-cortex-m0-mutex-stress-test",
+          "test-cmsis-os-validator-test": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R qemu-cortex-m0-cmsis-os-validator-test"
+        }
+      },
+      "qemu-cortex-m0-cmake-gcc-release": {
+        "inherit": [
+          "qemu-cortex-m0-cmake-gcc-debug"
+        ],
+        "properties": {
+          "buildType": "MinSizeRel",
+          "shortConfigurationName": "m0r"
+        }
+      },
+      "qemu-cortex-m3-cmake-gcc-debug": {
+        "inherit": [
+          "cortexm-actions",
+          "cmake-actions",
+          "cortexm-dependencies",
+          "arm-cmsis-dependencies",
+          "arm-cmsis-core-dependencies",
+          "arm-none-eabi-gcc-dependencies",
+          "qemu-arm-dependencies",
+          "short-win-paths-properties"
+        ],
+        "properties": {
+          "buildType": "Debug",
+          "platformName": "qemu-cortex-m3",
+          "toolchainFileName": "arm-none-eabi-gcc.cmake",
+          "shortConfigurationName": "m3d"
+        },
+        "actions": {
+          "test": "cd {{ properties.buildFolderRelativePath }} && ctest -V -LE hwd",
+          "test-rtos-apis-test": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R qemu-cortex-m3-rtos-apis-test",
+          "test-mutex-stress-test": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R qemu-cortex-m3-mutex-stress-test",
+          "test-cmsis-os-validator-test": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R qemu-cortex-m3-cmsis-os-validator-test"
+        }
+      },
+      "qemu-cortex-m3-cmake-gcc-release": {
+        "inherit": [
+          "qemu-cortex-m3-cmake-gcc-debug"
+        ],
+        "properties": {
+          "buildType": "MinSizeRel",
+          "shortConfigurationName": "m3r"
+        }
+      },
+      "qemu-cortex-m4f-cmake-gcc-debug": {
+        "inherit": [
+          "cortexm-actions",
+          "cmake-actions",
+          "cortexm-dependencies",
+          "arm-cmsis-dependencies",
+          "arm-cmsis-core-dependencies",
+          "arm-none-eabi-gcc-dependencies",
+          "qemu-arm-dependencies",
+          "short-win-paths-properties"
+        ],
+        "properties": {
+          "buildType": "Debug",
+          "platformName": "qemu-cortex-m4f",
+          "toolchainFileName": "arm-none-eabi-gcc.cmake",
+          "shortConfigurationName": "m4fd"
+        },
+        "actions": {
+          "test": "cd {{ properties.buildFolderRelativePath }} && ctest -V -LE hwd",
+          "test-rtos-apis-test": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R qemu-cortex-m4f-rtos-apis-test",
+          "test-mutex-stress-test": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R qemu-cortex-m4f-mutex-stress-test",
+          "test-cmsis-os-validator-test": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R qemu-cortex-m4f-cmsis-os-validator-test"
+        }
+      },
+      "qemu-cortex-m4f-cmake-gcc-release": {
+        "inherit": [
+          "qemu-cortex-m4f-cmake-gcc-debug"
+        ],
+        "properties": {
+          "buildType": "MinSizeRel",
+          "shortConfigurationName": "m4fr"
+        }
+      },
+      "qemu-cortex-m7f-cmake-gcc-debug": {
+        "inherit": [
+          "cortexm-actions",
+          "cmake-actions",
+          "cortexm-dependencies",
+          "arm-cmsis-dependencies",
+          "arm-cmsis-core-dependencies",
+          "arm-none-eabi-gcc-dependencies",
+          "qemu-arm-dependencies",
+          "short-win-paths-properties"
+        ],
+        "properties": {
+          "buildType": "Debug",
+          "platformName": "qemu-cortex-m7f",
+          "toolchainFileName": "arm-none-eabi-gcc.cmake",
+          "shortConfigurationName": "m7fd"
+        },
+        "actions": {
+          "test": "cd {{ properties.buildFolderRelativePath }} && ctest -V -LE hwd",
+          "test-rtos-apis-test": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R qemu-cortex-m7f-rtos-apis-test",
+          "test-mutex-stress-test": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R qemu-cortex-m7f-mutex-stress-test",
+          "test-cmsis-os-validator-test": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R qemu-cortex-m7f-cmsis-os-validator-test"
+        }
+      },
+      "qemu-cortex-m7f-cmake-gcc-release": {
+        "inherit": [
+          "qemu-cortex-m7f-cmake-gcc-debug"
+        ],
+        "properties": {
+          "buildType": "MinSizeRel",
+          "shortConfigurationName": "m7fr"
+        }
+      },
+      "qemu-cortex-m0-cmake-debug": {
+        "inherit": [
+          "qemu-cortex-m0-cmake-gcc-debug"
+        ]
+      },
+      "qemu-cortex-m0-cmake-release": {
+        "inherit": [
+          "qemu-cortex-m0-cmake-gcc-release"
+        ]
+      },
+      "qemu-cortex-m3-cmake-debug": {
+        "inherit": [
+          "qemu-cortex-m3-cmake-gcc-debug"
+        ]
+      },
+      "qemu-cortex-m3-cmake-release": {
+        "inherit": [
+          "qemu-cortex-m3-cmake-gcc-release"
+        ]
+      },
+      "qemu-cortex-m4f-cmake-debug": {
+        "inherit": [
+          "qemu-cortex-m4f-cmake-gcc-debug"
+        ]
+      },
+      "qemu-cortex-m4f-cmake-release": {
+        "inherit": [
+          "qemu-cortex-m4f-cmake-gcc-release"
+        ]
+      },
+      "qemu-cortex-m7f-cmake-debug": {
+        "inherit": [
+          "qemu-cortex-m7f-cmake-gcc-debug"
+        ]
+      },
+      "qemu-cortex-m7f-cmake-release": {
+        "inherit": [
+          "qemu-cortex-m7f-cmake-gcc-release"
+        ]
+      },
+      "raspberrypi-pico-cmake-debug": {
+        "inherit": [
+          "raspberrypi-pico-cmake-gcc-debug"
+        ]
+      },
+      "raspberrypi-pico-cmake-release": {
+        "inherit": [
+          "raspberrypi-pico-cmake-gcc-release"
+        ]
+      },
+      "nucleo-f411re-cmake-debug": {
+        "inherit": [
+          "nucleo-f411re-cmake-gcc-debug"
+        ]
+      },
+      "nucleo-f411re-cmake-release": {
+        "inherit": [
+          "nucleo-f411re-cmake-gcc-release"
+        ]
+      },
+      "nucleo-f767zi-cmake-debug": {
+        "inherit": [
+          "nucleo-f767zi-cmake-gcc-debug"
+        ]
+      },
+      "nucleo-f767zi-cmake-release": {
+        "inherit": [
+          "nucleo-f767zi-cmake-gcc-release"
+        ]
+      },
+      "nucleo-h743zi-cmake-debug": {
+        "inherit": [
+          "nucleo-h743zi-cmake-gcc-debug"
+        ]
+      },
+      "nucleo-h743zi-cmake-release": {
+        "inherit": [
+          "nucleo-h743zi-cmake-gcc-release"
+        ]
+      },
+      "raspberrypi-pico-cmake-gcc-debug": {
+        "inherit": [
+          "cortexm-actions",
+          "cmake-actions",
+          "cortexm-dependencies",
+          "arm-none-eabi-gcc-dependencies",
+          "openocd-dependencies",
+          "short-win-paths-properties"
+        ],
+        "properties": {
+          "buildType": "Debug",
+          "platformName": "raspberrypi-pico",
+          "toolchainFileName": "arm-none-eabi-gcc.cmake",
+          "shortConfigurationName": "rpd"
+        },
+        "devDependencies": {
+          "@xpack-3rd-party/raspberrypi-pico-sdk": {
+            "specifier": "github:xpack-3rd-party/raspberrypi-pico-sdk-xpack#v1.5.1-1",
+            "local": "link",
+            "platforms": "all"
+          }
+        },
+        "actions": {
+          "test": "cd {{ properties.buildFolderRelativePath }} && ctest -V -LE hwd",
+          "link-deps": [
+            "xpm link @micro-os-plus/micro-os-plus-iii-cortexm --config {{ configuration.name }}",
+            "xpm link @xpack-3rd-party/raspberrypi-pico-sdk --config {{ configuration.name }}"
+          ]
+        }
+      },
+      "raspberrypi-pico-cmake-gcc-release": {
+        "inherit": [
+          "raspberrypi-pico-cmake-gcc-debug"
+        ],
+        "properties": {
+          "buildType": "MinSizeRel",
+          "shortConfigurationName": "rpr"
+        }
+      },
+      "cortexm-pico2-cmake-gcc-debug": {
+        "inherit": [
+          "cortexm-actions",
+          "cmake-actions",
+          "cortexm-dependencies",
+          "arm-cmsis-dependencies",
+          "arm-none-eabi-gcc-dependencies",
+          "openocd-dependencies",
+          "short-win-paths-properties"
+        ],
+        "properties": {
+          "buildType": "Debug",
+          "platformName": "cortexm-pico2",
+          "toolchainFileName": "arm-none-eabi-gcc.cmake",
+          "shortConfigurationName": "cp2d"
+        },
+        "actions": {
+          "test": "cd {{ properties.buildFolderRelativePath }} && ctest -V -LE hwd",
+          "test-cmsis-os-validator-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico2-cmsis-os-validator-qemu",
+          "test-cmsis-os-validator-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico2-cmsis-os-validator-hwd",
+          "test-cmsis-os-validator-ram-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico2-cmsis-os-validator-ram-hwd",
+          "test-exc-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico2-exc-test-hwd",
+          "test-mutex-stress-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico2-mutex-stress-qemu",
+          "test-fp-switch-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico2-fp-switch-qemu",
+          "test-mutex-stress-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico2-mutex-stress-hwd",
+          "test-mutex-stress-ram-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico2-mutex-stress-ram-hwd",
+          "test-fp-switch-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico2-fp-switch-hwd",
+          "test-rtos-apis-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico2-rtos-apis-qemu",
+          "test-rtos-apis-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico2-rtos-apis-hwd",
+          "test-rtos-apis-ram-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico2-rtos-apis-ram-hwd",
+          "test-sc-test-ko-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico2-sc-test-ko-qemu",
+          "test-sc-test-ko-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico2-sc-test-ko-hwd",
+          "test-smp-mat-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico2-smp-mat-test-hwd",
+          "test-smp-mat-test-ram-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico2-smp-mat-test-ram-hwd",
+          "test-smp-test-ko-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico2-smp-test-ko-hwd",
+          "test-smp-test-usb-cdc-acm-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico2-smp-test-usb-cdc-acm-hwd",
+          "test-smp-test-usb-hid-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico2-smp-test-usb-hid-hwd",
+          "test-smp-test0-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico2-smp-test0-hwd",
+          "test-smp-test1-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico2-smp-test1-qemu",
+          "test-smp-test1-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico2-smp-test1-hwd",
+          "test-smp-test2-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico2-smp-test2-hwd",
+          "test-smp-test3-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico2-smp-test3-hwd",
+          "test-smp-test4-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico2-smp-test4-hwd",
+          "test-smp-test5-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico2-smp-test5-hwd"
+        }
+      },
+      "cortexm-pico2-cmake-gcc-release": {
+        "inherit": [
+          "cortexm-pico2-cmake-gcc-debug"
+        ],
+        "properties": {
+          "buildType": "MinSizeRel",
+          "shortConfigurationName": "cp2r"
+        }
+      },
+      "cortexm-pico-cmake-gcc-debug": {
+        "inherit": [
+          "cortexm-actions",
+          "cmake-actions",
+          "cortexm-dependencies",
+          "arm-cmsis-dependencies",
+          "arm-none-eabi-gcc-dependencies",
+          "openocd-dependencies",
+          "short-win-paths-properties"
+        ],
+        "properties": {
+          "buildType": "Debug",
+          "platformName": "cortexm-pico",
+          "toolchainFileName": "arm-none-eabi-gcc.cmake",
+          "shortConfigurationName": "cp1d"
+        },
+        "actions": {
+          "test": "cd {{ properties.buildFolderRelativePath }} && ctest -V -LE hwd",
+          "test-cmsis-os-validator-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico-cmsis-os-validator-qemu",
+          "test-cmsis-os-validator-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico-cmsis-os-validator-hwd",
+          "test-cmsis-os-validator-ram-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico-cmsis-os-validator-ram-hwd",
+          "test-exc-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico-exc-test-hwd",
+          "test-mutex-stress-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico-mutex-stress-qemu",
+          "test-fp-switch-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico-fp-switch-qemu",
+          "test-mutex-stress-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico-mutex-stress-hwd",
+          "test-mutex-stress-ram-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico-mutex-stress-ram-hwd",
+          "test-fp-switch-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico-fp-switch-hwd",
+          "test-rtos-apis-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico-rtos-apis-qemu",
+          "test-rtos-apis-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico-rtos-apis-hwd",
+          "test-rtos-apis-ram-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico-rtos-apis-ram-hwd",
+          "test-sc-test-ko-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico-sc-test-ko-qemu",
+          "test-sc-test-ko-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico-sc-test-ko-hwd",
+          "test-smp-mat-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico-smp-mat-test-hwd",
+          "test-smp-mat-test-ram-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico-smp-mat-test-ram-hwd",
+          "test-smp-test-ko-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico-smp-test-ko-hwd",
+          "test-smp-test-usb-cdc-acm-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico-smp-test-usb-cdc-acm-hwd",
+          "test-smp-test-usb-hid-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico-smp-test-usb-hid-hwd",
+          "test-smp-test0-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico-smp-test0-hwd",
+          "test-smp-test1-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico-smp-test1-qemu",
+          "test-smp-test1-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico-smp-test1-hwd",
+          "test-smp-test2-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico-smp-test2-hwd",
+          "test-smp-test3-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico-smp-test3-hwd",
+          "test-smp-test4-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico-smp-test4-hwd",
+          "test-smp-test5-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico-smp-test5-hwd"
+        }
+      },
+      "cortexm-pico-cmake-gcc-release": {
+        "inherit": [
+          "cortexm-pico-cmake-gcc-debug"
+        ],
+        "properties": {
+          "buildType": "MinSizeRel",
+          "shortConfigurationName": "cp1r"
+        }
+      },
+      "pico2-1cpu-cmake-gcc-debug": {
+        "inherit": [
+          "cortexm-actions",
+          "cmake-actions",
+          "cortexm-dependencies",
+          "arm-cmsis-dependencies",
+          "arm-cmsis-core-dependencies",
+          "arm-none-eabi-gcc-dependencies",
+          "qemu-arm-dependencies",
+          "short-win-paths-properties"
+        ],
+        "properties": {
+          "buildType": "Debug",
+          "platformName": "pico2-1cpu",
+          "toolchainFileName": "arm-none-eabi-gcc.cmake",
+          "shortConfigurationName": "p2c1d"
+        },
+        "actions": {
+          "test": "cd {{ properties.buildFolderRelativePath }} && ctest -V -LE hwd",
+          "test-rtos-apis-test": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R pico2-1cpu-rtos-apis-test",
+          "test-mutex-stress-test": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R pico2-1cpu-mutex-stress-test",
+          "test-fp-switch-test": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R pico2-1cpu-fp-switch-test",
+          "test-cmsis-os-validator-test": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R pico2-1cpu-cmsis-os-validator-test"
+        }
+      },
+      "pico2-1cpu-cmake-gcc-release": {
+        "inherit": [
+          "pico2-1cpu-cmake-gcc-debug"
+        ],
+        "properties": {
+          "buildType": "MinSizeRel",
+          "shortConfigurationName": "p2c1r"
+        }
+      },
+      "2xcortex-m33-cmake-gcc-debug": {
+        "inherit": [
+          "cortexm-actions",
+          "cmake-actions",
+          "cortexm-dependencies",
+          "arm-cmsis-dependencies",
+          "arm-cmsis-core-dependencies",
+          "arm-none-eabi-gcc-dependencies",
+          "qemu-arm-dependencies",
+          "short-win-paths-properties"
+        ],
+        "properties": {
+          "buildType": "Debug",
+          "platformName": "2xcortex-m33",
+          "toolchainFileName": "arm-none-eabi-gcc.cmake",
+          "shortConfigurationName": "2cm33d"
+        },
+        "actions": {
+          "test": "cd {{ properties.buildFolderRelativePath }} && ctest -V -LE hwd",
+          "test-rtos-apis-test": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R 2xcortex-m33-rtos-apis-test",
+          "test-mutex-stress-test": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R 2xcortex-m33-mutex-stress-test",
+          "test-fp-switch-test": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R 2xcortex-m33-fp-switch-test",
+          "test-cmsis-os-validator-test": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R 2xcortex-m33-cmsis-os-validator-test"
+        }
+      },
+      "2xcortex-m33-cmake-gcc-release": {
+        "inherit": [
+          "2xcortex-m33-cmake-gcc-debug"
+        ],
+        "properties": {
+          "buildType": "MinSizeRel",
+          "shortConfigurationName": "2cm33r"
+        }
+      },
+      "cortexm-pico2-pizero-cmake-gcc-debug": {
+        "inherit": [
+          "cortexm-actions",
+          "cmake-actions",
+          "cortexm-dependencies",
+          "arm-cmsis-dependencies",
+          "arm-none-eabi-gcc-dependencies",
+          "openocd-dependencies",
+          "short-win-paths-properties"
+        ],
+        "properties": {
+          "buildType": "Debug",
+          "platformName": "cortexm-pico2-pizero",
+          "toolchainFileName": "arm-none-eabi-gcc.cmake",
+          "shortConfigurationName": "cpzd"
+        },
+        "actions": {
+          "test": "cd {{ properties.buildFolderRelativePath }} && ctest -V -LE hwd",
+          "test-exc-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico2-pizero-exc-test-hwd",
+          "test-sc-test-ko-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico2-pizero-sc-test-ko-hwd",
+          "test-smp-mat-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico2-pizero-smp-mat-test-hwd",
+          "test-smp-test-ko-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico2-pizero-smp-test-ko-hwd",
+          "test-psram-exec-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico2-pizero-psram-exec-hwd",
+          "test-psram-mat-test-250-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico2-pizero-psram-mat-test-250-hwd",
+          "test-smp-test-usb-cdc-acm-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico2-pizero-smp-test-usb-cdc-acm-hwd",
+          "test-smp-test-usb-hid-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico2-pizero-smp-test-usb-hid-hwd",
+          "test-smp-test0-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico2-pizero-smp-test0-hwd",
+          "test-smp-test1-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico2-pizero-smp-test1-hwd",
+          "test-smp-test2-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico2-pizero-smp-test2-hwd",
+          "test-smp-test3-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico2-pizero-smp-test3-hwd",
+          "test-smp-test4-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico2-pizero-smp-test4-hwd",
+          "test-smp-test5-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico2-pizero-smp-test5-hwd"
+        }
+      },
+      "cortexm-pico2-pizero-cmake-gcc-release": {
+        "inherit": [
+          "cortexm-pico2-pizero-cmake-gcc-debug"
+        ],
+        "properties": {
+          "buildType": "MinSizeRel",
+          "shortConfigurationName": "cpzr"
+        }
+      },
+      "cortexm-pico2-rp2350b-psram-cmake-gcc-debug": {
+        "inherit": [
+          "cortexm-actions",
+          "cmake-actions",
+          "cortexm-dependencies",
+          "arm-cmsis-dependencies",
+          "arm-none-eabi-gcc-dependencies",
+          "openocd-dependencies",
+          "short-win-paths-properties"
+        ],
+        "properties": {
+          "buildType": "Debug",
+          "platformName": "cortexm-pico2-rp2350b-psram",
+          "toolchainFileName": "arm-none-eabi-gcc.cmake",
+          "shortConfigurationName": "cpsd"
+        },
+        "actions": {
+          "test": "cd {{ properties.buildFolderRelativePath }} && ctest -V -LE hwd",
+          "test-exc-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico2-rp2350b-psram-exc-test-hwd",
+          "test-fp-switch-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico2-rp2350b-psram-fp-switch-qemu",
+          "test-fp-switch-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico2-rp2350b-psram-fp-switch-hwd",
+          "test-sc-test-ko-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico2-rp2350b-psram-sc-test-ko-qemu",
+          "test-sc-test-ko-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico2-rp2350b-psram-sc-test-ko-hwd",
+          "test-smp-mat-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico2-rp2350b-psram-smp-mat-test-hwd",
+          "test-smp-test0-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico2-rp2350b-psram-smp-test0-hwd",
+          "test-smp-test1-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico2-rp2350b-psram-smp-test1-qemu",
+          "test-smp-test1-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico2-rp2350b-psram-smp-test1-hwd",
+          "test-smp-test2-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico2-rp2350b-psram-smp-test2-hwd",
+          "test-smp-test3-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico2-rp2350b-psram-smp-test3-hwd",
+          "test-smp-test4-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico2-rp2350b-psram-smp-test4-hwd",
+          "test-smp-test5-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico2-rp2350b-psram-smp-test5-hwd",
+          "test-smp-test-ko-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico2-rp2350b-psram-smp-test-ko-hwd",
+          "test-smp-test-nested-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico2-rp2350b-psram-smp-test-nested-hwd",
+          "test-smp-test-nested-clock-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico2-rp2350b-psram-smp-test-nested-clock-hwd",
+          "test-smp-test-nested-clock_200-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico2-rp2350b-psram-smp-test-nested-clock_200-hwd",
+          "test-smp-test-nested-clock_250-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-pico2-rp2350b-psram-smp-test-nested-clock_250-hwd"
+        }
+      },
+      "cortexm-pico2-rp2350b-psram-cmake-gcc-release": {
+        "inherit": [
+          "cortexm-pico2-rp2350b-psram-cmake-gcc-debug"
+        ],
+        "properties": {
+          "buildType": "MinSizeRel",
+          "shortConfigurationName": "cpsr"
+        }
+      },
+      "cortexm-nucleof411-cmake-gcc-debug": {
+        "inherit": [
+          "cortexm-actions",
+          "cmake-actions",
+          "cortexm-dependencies",
+          "arm-cmsis-dependencies",
+          "arm-none-eabi-gcc-dependencies",
+          "openocd-dependencies",
+          "short-win-paths-properties"
+        ],
+        "properties": {
+          "buildType": "Debug",
+          "platformName": "cortexm-nucleof411",
+          "toolchainFileName": "arm-none-eabi-gcc.cmake",
+          "shortConfigurationName": "cnfd"
+        },
+        "actions": {
+          "test": "cd {{ properties.buildFolderRelativePath }} && ctest -V -LE hwd",
+          "test-cmsis-os-validator-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-nucleof411-cmsis-os-validator-hwd",
+          "test-mos-test1-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-nucleof411-mos-test1-hwd",
+          "test-mutex-stress-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-nucleof411-mutex-stress-hwd",
+          "test-rtos-apis-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-nucleof411-rtos-apis-hwd"
+        }
+      },
+      "cortexm-nucleof411-cmake-gcc-release": {
+        "inherit": [
+          "cortexm-nucleof411-cmake-gcc-debug"
+        ],
+        "properties": {
+          "buildType": "MinSizeRel",
+          "shortConfigurationName": "cnfr"
+        }
+      },
+      "cortexm-weactf411-cmake-gcc-debug": {
+        "inherit": [
+          "cortexm-actions",
+          "cmake-actions",
+          "cortexm-dependencies",
+          "arm-cmsis-dependencies",
+          "arm-none-eabi-gcc-dependencies",
+          "openocd-dependencies",
+          "short-win-paths-properties"
+        ],
+        "properties": {
+          "buildType": "Debug",
+          "platformName": "cortexm-weactf411",
+          "toolchainFileName": "arm-none-eabi-gcc.cmake",
+          "shortConfigurationName": "cw4d"
+        },
+        "actions": {
+          "test": "cd {{ properties.buildFolderRelativePath }} && ctest -V -LE hwd",
+          "test-cmsis-os-validator-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-weactf411-cmsis-os-validator-hwd",
+          "test-mos-test1-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-weactf411-mos-test1-hwd",
+          "test-mutex-stress-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-weactf411-mutex-stress-hwd",
+          "test-rtos-apis-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-weactf411-rtos-apis-hwd",
+          "test-spi-pipeline-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-weactf411-spi-pipeline-hwd"
+        }
+      },
+      "cortexm-weactf411-cmake-gcc-release": {
+        "inherit": [
+          "cortexm-weactf411-cmake-gcc-debug"
+        ],
+        "properties": {
+          "buildType": "MinSizeRel",
+          "shortConfigurationName": "cw4r"
+        }
+      },
+      "cortexm-weactf412-cmake-gcc-debug": {
+        "inherit": [
+          "cortexm-actions",
+          "cmake-actions",
+          "cortexm-dependencies",
+          "arm-cmsis-dependencies",
+          "arm-none-eabi-gcc-dependencies",
+          "openocd-dependencies",
+          "short-win-paths-properties"
+        ],
+        "properties": {
+          "buildType": "Debug",
+          "platformName": "cortexm-weactf412",
+          "toolchainFileName": "arm-none-eabi-gcc.cmake",
+          "shortConfigurationName": "cw4rd"
+        },
+        "actions": {
+          "test": "cd {{ properties.buildFolderRelativePath }} && ctest -V -LE hwd",
+          "test-cmsis-os-validator-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-weactf412-cmsis-os-validator-hwd",
+          "test-mos-test1-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-weactf412-mos-test1-hwd",
+          "test-mutex-stress-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-weactf412-mutex-stress-hwd",
+          "test-rtos-apis-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-weactf412-rtos-apis-hwd",
+          "test-uart-test1-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R cortexm-weactf412-uart-test1-hwd"
+        }
+      },
+      "cortexm-weactf412-cmake-gcc-release": {
+        "inherit": [
+          "cortexm-weactf412-cmake-gcc-debug"
+        ],
+        "properties": {
+          "buildType": "MinSizeRel",
+          "shortConfigurationName": "cw4rr"
+        }
+      },
+      "nucleo-f411re-cmake-gcc-debug": {
+        "inherit": [
+          "cortexm-actions",
+          "cmake-actions",
+          "cortexm-dependencies",
+          "arm-none-eabi-gcc-dependencies",
+          "openocd-dependencies",
+          "short-win-paths-properties"
+        ],
+        "properties": {
+          "buildType": "Debug",
+          "platformName": "nucleo-f411re",
+          "toolchainFileName": "arm-none-eabi-gcc.cmake",
+          "shortConfigurationName": "nf4d"
+        },
+        "actions": {
+          "link-deps": [
+            "xpm link @micro-os-plus/micro-os-plus-iii-cortexm @xpack-segger/rtt @xpack-segger/system-view --config {{ configuration.name }}"
+          ],
+          "test": "cd {{ properties.buildFolderRelativePath }} && ctest -V -LE hwd"
+        },
+        "devDependencies": {
+          "@xpack-segger/rtt": {
+            "specifier": "github:xpack-3rd-party/segger-rtt-xpack#v8.56.1-2",
+            "local": "link",
+            "platforms": "all"
+          },
+          "@xpack-segger/system-view": {
+            "specifier": "github:xpack-3rd-party/segger-system-view-xpack#v3.60.5-2",
+            "local": "link",
+            "platforms": "all"
+          }
+        }
+      },
+      "nucleo-f411re-cmake-gcc-release": {
+        "inherit": [
+          "nucleo-f411re-cmake-gcc-debug"
+        ],
+        "properties": {
+          "buildType": "MinSizeRel",
+          "shortConfigurationName": "nf4r"
+        }
+      },
+      "nucleo-f767zi-cmake-gcc-debug": {
+        "inherit": [
+          "cortexm-actions",
+          "cmake-actions",
+          "cortexm-dependencies",
+          "arm-none-eabi-gcc-dependencies",
+          "openocd-dependencies",
+          "short-win-paths-properties"
+        ],
+        "properties": {
+          "buildType": "Debug",
+          "platformName": "nucleo-f767zi",
+          "toolchainFileName": "arm-none-eabi-gcc.cmake",
+          "shortConfigurationName": "nf7d"
+        },
+        "actions": {
+          "test": "cd {{ properties.buildFolderRelativePath }} && ctest -V -LE hwd",
+          "link-deps": [
+            "xpm link @micro-os-plus/micro-os-plus-iii-cortexm --config {{ configuration.name }}"
+          ]
+        }
+      },
+      "nucleo-f767zi-cmake-gcc-release": {
+        "inherit": [
+          "nucleo-f767zi-cmake-gcc-debug"
+        ],
+        "properties": {
+          "buildType": "MinSizeRel",
+          "shortConfigurationName": "nf7r"
+        }
+      },
+      "nucleo-h743zi-cmake-gcc-debug": {
+        "inherit": [
+          "cortexm-actions",
+          "cmake-actions",
+          "cortexm-dependencies",
+          "arm-none-eabi-gcc-dependencies",
+          "openocd-dependencies",
+          "short-win-paths-properties"
+        ],
+        "properties": {
+          "buildType": "Debug",
+          "platformName": "nucleo-h743zi",
+          "toolchainFileName": "arm-none-eabi-gcc.cmake",
+          "shortConfigurationName": "nh7d"
+        },
+        "actions": {
+          "test": "cd {{ properties.buildFolderRelativePath }} && ctest -V -LE hwd",
+          "link-deps": [
+            "xpm link @micro-os-plus/micro-os-plus-iii-cortexm --config {{ configuration.name }}"
+          ]
+        }
+      },
+      "nucleo-h743zi-cmake-gcc-release": {
+        "inherit": [
+          "nucleo-h743zi-cmake-gcc-debug"
+        ],
+        "properties": {
+          "buildType": "MinSizeRel",
+          "shortConfigurationName": "nh7r"
+        }
+      },
+      "aarch32-rpi-zero-2w-cmake-gcc-debug": {
+        "inherit": [
+          "aarch32-actions",
+          "cmake-actions",
+          "aarch32-dependencies",
+          "short-win-paths-properties"
+        ],
+        "properties": {
+          "buildType": "Debug",
+          "platformName": "aarch32-rpi-zero-2w",
+          "toolchainFileName": "arm-none-eabi-gcc.cmake",
+          "shortConfigurationName": "a32d"
+        },
+        "actions": {
+          "test": "cd {{ properties.buildFolderRelativePath }} && ctest -V -LE hwd",
+          "test-sd_test-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-rpi-zero-2w-sd_test-qemu",
+          "test-sd_test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-rpi-zero-2w-sd_test-hwd",
+          "test-smp-mat-sdcard-test-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-rpi-zero-2w-smp-mat-sdcard-test-qemu",
+          "test-smp-mat-sdcard-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-rpi-zero-2w-smp-mat-sdcard-test-hwd",
+          "test-smp-mat-test-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-rpi-zero-2w-smp-mat-test-qemu",
+          "test-smp-mat-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-rpi-zero-2w-smp-mat-test-hwd",
+          "test-smp-num-test-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-rpi-zero-2w-smp-num-test-qemu",
+          "test-smp-num-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-rpi-zero-2w-smp-num-test-hwd",
+          "test-smp-pipeline-test-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-rpi-zero-2w-smp-pipeline-test-qemu",
+          "test-smp-pipeline-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-rpi-zero-2w-smp-pipeline-test-hwd",
+          "test-smp-pro-cons-test-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-rpi-zero-2w-smp-pro-cons-test-qemu",
+          "test-smp-pro-cons-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-rpi-zero-2w-smp-pro-cons-test-hwd",
+          "test-smp_test0-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-rpi-zero-2w-smp_test0-qemu",
+          "test-smp_test0-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-rpi-zero-2w-smp_test0-hwd",
+          "test-smp_test1-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-rpi-zero-2w-smp_test1-qemu",
+          "test-smp_test1-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-rpi-zero-2w-smp_test1-hwd",
+          "test-smp_test2-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-rpi-zero-2w-smp_test2-qemu",
+          "test-smp_test2-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-rpi-zero-2w-smp_test2-hwd",
+          "test-smp_test3-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-rpi-zero-2w-smp_test3-qemu",
+          "test-smp_test3-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-rpi-zero-2w-smp_test3-hwd",
+          "test-smp_test4-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-rpi-zero-2w-smp_test4-qemu",
+          "test-smp_test4-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-rpi-zero-2w-smp_test4-hwd",
+          "test-usb_test-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-rpi-zero-2w-usb_test-qemu",
+          "test-usb_test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-rpi-zero-2w-usb_test-hwd",
+          "test-mutex-stress-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-rpi-zero-2w-mutex-stress-hwd",
+          "test-mutex-stress-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-rpi-zero-2w-mutex-stress-qemu",
+          "test-rtos-apis-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-rpi-zero-2w-rtos-apis-hwd",
+          "test-rtos-apis-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-rpi-zero-2w-rtos-apis-qemu",
+          "test-cmsis-os-validator-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-rpi-zero-2w-cmsis-os-validator-hwd",
+          "test-cmsis-os-validator-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-rpi-zero-2w-cmsis-os-validator-qemu"
+        }
+      },
+      "aarch32-rpi-zero-2w-cmake-gcc-release": {
+        "inherit": [
+          "aarch32-rpi-zero-2w-cmake-gcc-debug"
+        ],
+        "properties": {
+          "buildType": "MinSizeRel",
+          "shortConfigurationName": "a32r"
+        }
+      },
+      "aarch32-rpi3b-cmake-gcc-debug": {
+        "inherit": [
+          "aarch32-actions",
+          "cmake-actions",
+          "aarch32-dependencies",
+          "short-win-paths-properties"
+        ],
+        "properties": {
+          "buildType": "Debug",
+          "platformName": "aarch32-rpi3b",
+          "toolchainFileName": "arm-none-eabi-gcc.cmake",
+          "shortConfigurationName": "a32p3d"
+        },
+        "actions": {
+          "test": "cd {{ properties.buildFolderRelativePath }} && ctest -V -LE hwd",
+          "test-mutex-stress-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-rpi3b-mutex-stress-hwd",
+          "test-mutex-stress-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-rpi3b-mutex-stress-qemu",
+          "test-rtos-apis-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-rpi3b-rtos-apis-hwd",
+          "test-rtos-apis-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-rpi3b-rtos-apis-qemu",
+          "test-cmsis-os-validator-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-rpi3b-cmsis-os-validator-hwd",
+          "test-cmsis-os-validator-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-rpi3b-cmsis-os-validator-qemu",
+          "test-sd_test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-rpi3b-sd_test-hwd",
+          "test-sd_test-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-rpi3b-sd_test-qemu",
+          "test-smp-mat-sdcard-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-rpi3b-smp-mat-sdcard-test-hwd",
+          "test-smp-mat-sdcard-test-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-rpi3b-smp-mat-sdcard-test-qemu",
+          "test-smp-mat-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-rpi3b-smp-mat-test-hwd",
+          "test-smp-mat-test-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-rpi3b-smp-mat-test-qemu",
+          "test-smp-num-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-rpi3b-smp-num-test-hwd",
+          "test-smp-num-test-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-rpi3b-smp-num-test-qemu",
+          "test-smp-pipeline-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-rpi3b-smp-pipeline-test-hwd",
+          "test-smp-pipeline-test-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-rpi3b-smp-pipeline-test-qemu",
+          "test-smp-pro-cons-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-rpi3b-smp-pro-cons-test-hwd",
+          "test-smp-pro-cons-test-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-rpi3b-smp-pro-cons-test-qemu",
+          "test-smp_test0-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-rpi3b-smp_test0-hwd",
+          "test-smp_test0-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-rpi3b-smp_test0-qemu",
+          "test-smp_test1-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-rpi3b-smp_test1-hwd",
+          "test-smp_test1-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-rpi3b-smp_test1-qemu",
+          "test-smp_test2-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-rpi3b-smp_test2-hwd",
+          "test-smp_test2-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-rpi3b-smp_test2-qemu",
+          "test-smp_test3-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-rpi3b-smp_test3-hwd",
+          "test-smp_test3-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-rpi3b-smp_test3-qemu",
+          "test-smp_test4-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-rpi3b-smp_test4-hwd",
+          "test-smp_test4-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-rpi3b-smp_test4-qemu",
+          "test-usb_test-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-rpi3b-usb_test-qemu"
+        }
+      },
+      "aarch32-rpi3b-cmake-gcc-release": {
+        "inherit": [
+          "aarch32-rpi3b-cmake-gcc-debug"
+        ],
+        "properties": {
+          "buildType": "MinSizeRel",
+          "shortConfigurationName": "a32p3r"
+        }
+      },
+      "aarch32-luckfox-lyra-cmake-gcc-debug": {
+        "inherit": [
+          "aarch32-actions",
+          "cmake-actions",
+          "aarch32-luckfox-lyra-dependencies",
+          "short-win-paths-properties"
+        ],
+        "properties": {
+          "buildType": "Debug",
+          "platformName": "aarch32-luckfox-lyra",
+          "toolchainFileName": "arm-none-eabi-gcc.cmake",
+          "shortConfigurationName": "lyd",
+          "commandCMakeReconfigure": "cmake -S . -B {{ properties.buildFolderRelativePathPosix }} -G Ninja -D CMAKE_BUILD_TYPE={{ properties.buildType }} -D PLATFORM_NAME={{ properties.platformName }} -D ENABLE_HW_TESTS=ON"
+        },
+        "actions": {
+          "test": "cd {{ properties.buildFolderRelativePath }} && ctest -V -LE hwd",
+          "test-sd_test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-luckfox-lyra-sd_test-hwd",
+          "test-smp-mat-sdcard-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-luckfox-lyra-smp-mat-sdcard-test-hwd",
+          "test-smp-mat-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-luckfox-lyra-smp-mat-test-hwd",
+          "test-smp-num-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-luckfox-lyra-smp-num-test-hwd",
+          "test-smp-pipeline-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-luckfox-lyra-smp-pipeline-test-hwd",
+          "test-smp-pro-cons-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-luckfox-lyra-smp-pro-cons-test-hwd",
+          "test-smp_test0-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-luckfox-lyra-smp_test0-hwd",
+          "test-smp_test1-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-luckfox-lyra-smp_test1-hwd",
+          "test-smp_test2-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-luckfox-lyra-smp_test2-hwd",
+          "test-smp_test3-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-luckfox-lyra-smp_test3-hwd",
+          "test-smp_test4-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-luckfox-lyra-smp_test4-hwd",
+          "test-smp_test5-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-luckfox-lyra-smp_test5-hwd",
+          "test-smp_test6-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-luckfox-lyra-smp_test6-hwd",
+          "test-smp_test7-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-luckfox-lyra-smp_test7-hwd",
+          "test-smp_test_int-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-luckfox-lyra-smp_test_int-hwd",
+          "test-smp_test_int2-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-luckfox-lyra-smp_test_int2-hwd",
+          "test-smp_test_int3-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-luckfox-lyra-smp_test_int3-hwd",
+          "test-smp_test_int4-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-luckfox-lyra-smp_test_int4-hwd",
+          "test-smp_test_int5-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-luckfox-lyra-smp_test_int5-hwd",
+          "test-mutex-stress-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch32-luckfox-lyra-mutex-stress-test-hwd"
+        }
+      },
+      "aarch32-luckfox-lyra-cmake-gcc-release": {
+        "inherit": [
+          "aarch32-luckfox-lyra-cmake-gcc-debug"
+        ],
+        "properties": {
+          "buildType": "MinSizeRel",
+          "shortConfigurationName": "lyr"
+        }
+      },
+      "aarch64-rpi-zero-2w-cmake-gcc-debug": {
+        "inherit": [
+          "aarch64-actions",
+          "cmake-actions",
+          "aarch64-dependencies",
+          "short-win-paths-properties"
+        ],
+        "properties": {
+          "buildType": "Debug",
+          "platformName": "aarch64-rpi-zero-2w",
+          "toolchainFileName": "aarch64-none-elf-gcc.cmake",
+          "shortConfigurationName": "a64d"
+        },
+        "actions": {
+          "test": "cd {{ properties.buildFolderRelativePath }} && ctest -V -LE hwd",
+          "test-sd_test-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi-zero-2w-sd_test-qemu",
+          "test-sd_test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi-zero-2w-sd_test-hwd",
+          "test-smp-mat-sdcard-test-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi-zero-2w-smp-mat-sdcard-test-qemu",
+          "test-smp-mat-sdcard-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi-zero-2w-smp-mat-sdcard-test-hwd",
+          "test-smp-mat-test-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi-zero-2w-smp-mat-test-qemu",
+          "test-smp-mat-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi-zero-2w-smp-mat-test-hwd",
+          "test-smp-num-test-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi-zero-2w-smp-num-test-qemu",
+          "test-smp-num-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi-zero-2w-smp-num-test-hwd",
+          "test-smp-pipeline-test-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi-zero-2w-smp-pipeline-test-qemu",
+          "test-smp-pipeline-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi-zero-2w-smp-pipeline-test-hwd",
+          "test-smp-pro-cons-test-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi-zero-2w-smp-pro-cons-test-qemu",
+          "test-smp-pro-cons-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi-zero-2w-smp-pro-cons-test-hwd",
+          "test-smp_test0-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi-zero-2w-smp_test0-qemu",
+          "test-smp_test0-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi-zero-2w-smp_test0-hwd",
+          "test-smp_test1-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi-zero-2w-smp_test1-qemu",
+          "test-smp_test1-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi-zero-2w-smp_test1-hwd",
+          "test-smp_test2-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi-zero-2w-smp_test2-qemu",
+          "test-smp_test2-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi-zero-2w-smp_test2-hwd",
+          "test-smp_test3-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi-zero-2w-smp_test3-qemu",
+          "test-smp_test3-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi-zero-2w-smp_test3-hwd",
+          "test-smp_test4-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi-zero-2w-smp_test4-qemu",
+          "test-smp_test4-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi-zero-2w-smp_test4-hwd",
+          "test-usb_test-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi-zero-2w-usb_test-qemu",
+          "test-usb_test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi-zero-2w-usb_test-hwd",
+          "test-mutex-stress-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi-zero-2w-mutex-stress-hwd",
+          "test-mutex-stress-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi-zero-2w-mutex-stress-qemu",
+          "test-rtos-apis-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi-zero-2w-rtos-apis-hwd",
+          "test-rtos-apis-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi-zero-2w-rtos-apis-qemu",
+          "test-cmsis-os-validator-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi-zero-2w-cmsis-os-validator-hwd",
+          "test-cmsis-os-validator-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi-zero-2w-cmsis-os-validator-qemu"
+        }
+      },
+      "aarch64-rpi-zero-2w-cmake-gcc-release": {
+        "inherit": [
+          "aarch64-rpi-zero-2w-cmake-gcc-debug"
+        ],
+        "properties": {
+          "buildType": "MinSizeRel",
+          "shortConfigurationName": "a64r"
+        }
+      },
+      "aarch64-rpi3b-cmake-gcc-debug": {
+        "inherit": [
+          "aarch64-actions",
+          "cmake-actions",
+          "aarch64-dependencies",
+          "short-win-paths-properties"
+        ],
+        "properties": {
+          "buildType": "Debug",
+          "platformName": "aarch64-rpi3b",
+          "toolchainFileName": "aarch64-none-elf-gcc.cmake",
+          "shortConfigurationName": "a64p3d"
+        },
+        "actions": {
+          "test": "cd {{ properties.buildFolderRelativePath }} && ctest -V -LE hwd",
+          "test-mutex-stress-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi3b-mutex-stress-hwd",
+          "test-mutex-stress-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi3b-mutex-stress-qemu",
+          "test-rtos-apis-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi3b-rtos-apis-hwd",
+          "test-rtos-apis-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi3b-rtos-apis-qemu",
+          "test-cmsis-os-validator-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi3b-cmsis-os-validator-hwd",
+          "test-cmsis-os-validator-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi3b-cmsis-os-validator-qemu",
+          "test-sd_test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi3b-sd_test-hwd",
+          "test-sd_test-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi3b-sd_test-qemu",
+          "test-smp-mat-sdcard-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi3b-smp-mat-sdcard-test-hwd",
+          "test-smp-mat-sdcard-test-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi3b-smp-mat-sdcard-test-qemu",
+          "test-smp-mat-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi3b-smp-mat-test-hwd",
+          "test-smp-mat-test-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi3b-smp-mat-test-qemu",
+          "test-smp-num-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi3b-smp-num-test-hwd",
+          "test-smp-num-test-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi3b-smp-num-test-qemu",
+          "test-smp-pipeline-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi3b-smp-pipeline-test-hwd",
+          "test-smp-pipeline-test-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi3b-smp-pipeline-test-qemu",
+          "test-smp-pro-cons-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi3b-smp-pro-cons-test-hwd",
+          "test-smp-pro-cons-test-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi3b-smp-pro-cons-test-qemu",
+          "test-smp_test0-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi3b-smp_test0-hwd",
+          "test-smp_test0-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi3b-smp_test0-qemu",
+          "test-smp_test1-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi3b-smp_test1-hwd",
+          "test-smp_test1-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi3b-smp_test1-qemu",
+          "test-smp_test2-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi3b-smp_test2-hwd",
+          "test-smp_test2-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi3b-smp_test2-qemu",
+          "test-smp_test3-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi3b-smp_test3-hwd",
+          "test-smp_test3-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi3b-smp_test3-qemu",
+          "test-smp_test4-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi3b-smp_test4-hwd",
+          "test-smp_test4-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi3b-smp_test4-qemu",
+          "test-usb_test-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi3b-usb_test-qemu"
+        }
+      },
+      "aarch64-rpi3b-cmake-gcc-release": {
+        "inherit": [
+          "aarch64-rpi3b-cmake-gcc-debug"
+        ],
+        "properties": {
+          "buildType": "MinSizeRel",
+          "shortConfigurationName": "a64p3r"
+        }
+      },
+      "aarch64-rpi4b-cmake-gcc-debug": {
+        "inherit": [
+          "aarch64-actions",
+          "cmake-actions",
+          "aarch64-dependencies",
+          "short-win-paths-properties"
+        ],
+        "properties": {
+          "buildType": "Debug",
+          "platformName": "aarch64-rpi4b",
+          "toolchainFileName": "aarch64-none-elf-gcc.cmake",
+          "shortConfigurationName": "a64p4d"
+        },
+        "actions": {
+          "test": "cd {{ properties.buildFolderRelativePath }} && ctest -V -LE hwd",
+          "test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -L hwd",
+          "test-cmsis-os-validator-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi4b-cmsis-os-validator-hwd",
+          "test-cmsis-os-validator-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi4b-cmsis-os-validator-qemu",
+          "test-mutex-stress-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi4b-mutex-stress-hwd",
+          "test-mutex-stress-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi4b-mutex-stress-qemu",
+          "test-rtos-apis-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi4b-rtos-apis-hwd",
+          "test-rtos-apis-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi4b-rtos-apis-qemu",
+          "test-sd_test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi4b-sd_test-hwd",
+          "test-sd_test-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi4b-sd_test-qemu",
+          "test-smp-mat-sdcard-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi4b-smp-mat-sdcard-test-hwd",
+          "test-smp-mat-sdcard-test-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi4b-smp-mat-sdcard-test-qemu",
+          "test-smp-mat-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi4b-smp-mat-test-hwd",
+          "test-smp-mat-test-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi4b-smp-mat-test-qemu",
+          "test-smp_mem_inter_test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi4b-smp_mem_inter_test-hwd",
+          "test-smp_mem_inter_test-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi4b-smp_mem_inter_test-qemu",
+          "test-smp_mem_test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi4b-smp_mem_test-hwd",
+          "test-smp_mem_test-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi4b-smp_mem_test-qemu",
+          "test-smp-num-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi4b-smp-num-test-hwd",
+          "test-smp-num-test-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi4b-smp-num-test-qemu",
+          "test-smp-pipeline-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi4b-smp-pipeline-test-hwd",
+          "test-smp-pipeline-test-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi4b-smp-pipeline-test-qemu",
+          "test-smp-pro-cons-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi4b-smp-pro-cons-test-hwd",
+          "test-smp-pro-cons-test-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi4b-smp-pro-cons-test-qemu",
+          "test-smp_test0-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi4b-smp_test0-hwd",
+          "test-smp_test0-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi4b-smp_test0-qemu",
+          "test-smp_test1-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi4b-smp_test1-hwd",
+          "test-smp_test1-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi4b-smp_test1-qemu",
+          "test-smp_test2-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi4b-smp_test2-hwd",
+          "test-smp_test2-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi4b-smp_test2-qemu",
+          "test-smp_test3-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi4b-smp_test3-hwd",
+          "test-smp_test3-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi4b-smp_test3-qemu",
+          "test-smp_test4-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi4b-smp_test4-hwd",
+          "test-smp_test4-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R aarch64-rpi4b-smp_test4-qemu"
+        }
+      },
+      "aarch64-rpi4b-cmake-gcc-release": {
+        "inherit": [
+          "aarch64-rpi4b-cmake-gcc-debug"
+        ],
+        "properties": {
+          "buildType": "MinSizeRel",
+          "shortConfigurationName": "a64p4r"
+        }
+      },
+      "riscv-actions": {
+        "hidden": true,
+        "actions": {
+          "install": [
+            "xpm install --config {{ configuration.name }}"
+          ]
+        }
+      },
+      "riscv-none-elf-gcc-dependencies": {
+        "hidden": true,
+        "$devDependenciesUrl": "https://www.npmjs.com/package/@xpack-dev-tools/riscv-none-elf-gcc",
+        "devDependencies": {
+          "@xpack-dev-tools/riscv-none-elf-gcc": "15.2.0-1.1"
+        }
+      },
+      "qemu-riscv-dependencies": {
+        "hidden": true,
+        "$devDependenciesUrl": "https://www.npmjs.com/package/@xpack-dev-tools/qemu-riscv",
+        "devDependencies": {
+          "@xpack-dev-tools/qemu-riscv": "9.2.4-1.1"
+        }
+      },
+      "riscv-milkv-duo-cmake-gcc-debug": {
+        "inherit": [
+          "riscv-actions",
+          "cmake-actions",
+          "riscv-none-elf-gcc-dependencies",
+          "qemu-riscv-dependencies",
+          "openocd-dependencies",
+          "short-win-paths-properties"
+        ],
+        "properties": {
+          "buildType": "Debug",
+          "platformName": "riscv-milkv-duo",
+          "toolchainFileName": "riscv-none-elf-gcc.cmake",
+          "shortConfigurationName": "rmdd"
+        },
+        "actions": {
+          "test": "cd {{ properties.buildFolderRelativePath }} && ctest -V -LE hwd",
+          "test-blinky-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-blinky-qemu",
+          "test-blinky-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-blinky-hwd",
+          "test-clock-test-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-clock-test-qemu",
+          "test-clock-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-clock-test-hwd",
+          "test-cmsis-os-validator-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-cmsis-os-validator-qemu",
+          "test-cmsis-os-validator-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-cmsis-os-validator-hwd",
+          "test-exc-test-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-exc-test-qemu",
+          "test-exc-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-exc-test-hwd",
+          "test-fp-switch-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-fp-switch-qemu",
+          "test-fp-switch-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-fp-switch-hwd",
+          "test-instrumentation-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-instrumentation-qemu",
+          "test-instrumentation-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-instrumentation-hwd",
+          "test-mmu-test-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-mmu-test-qemu",
+          "test-mmu-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-mmu-test-hwd",
+          "test-mos-test1-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-mos-test1-qemu",
+          "test-mos-test1-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-mos-test1-hwd",
+          "test-mutex-ceiling-test-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-mutex-ceiling-test-qemu",
+          "test-mutex-ceiling-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-mutex-ceiling-test-hwd",
+          "test-mutex-stress-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-mutex-stress-qemu",
+          "test-mutex-stress-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-mutex-stress-hwd",
+          "test-rtos-apis-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-rtos-apis-qemu",
+          "test-rtos-apis-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-rtos-apis-hwd",
+          "test-sc-test-ko-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-sc-test-ko-qemu",
+          "test-sc-test-ko-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-sc-test-ko-hwd",
+          "test-semihosting-test-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-semihosting-test-qemu",
+          "test-semihosting-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-semihosting-test-hwd",
+          "test-smp_test0-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-smp_test0-qemu",
+          "test-smp_test0-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-smp_test0-hwd",
+          "test-hwd-all": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && BUILD={{ properties.buildFolderRelativePath }}/platform-bin/port-tests bash ../../micro-os-plus-iii-riscv/test/boards/milkv-duo/hw-all.sh"
+        }
+      },
+      "riscv-milkv-duo-cmake-gcc-release": {
+        "inherit": [
+          "riscv-actions",
+          "cmake-actions",
+          "riscv-none-elf-gcc-dependencies",
+          "qemu-riscv-dependencies",
+          "openocd-dependencies",
+          "short-win-paths-properties"
+        ],
+        "properties": {
+          "buildType": "Release",
+          "platformName": "riscv-milkv-duo",
+          "toolchainFileName": "riscv-none-elf-gcc.cmake",
+          "shortConfigurationName": "rmdr"
+        },
+        "actions": {
+          "test": "cd {{ properties.buildFolderRelativePath }} && ctest -V -LE hwd",
+          "test-blinky-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-blinky-qemu",
+          "test-blinky-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-blinky-hwd",
+          "test-clock-test-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-clock-test-qemu",
+          "test-clock-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-clock-test-hwd",
+          "test-cmsis-os-validator-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-cmsis-os-validator-qemu",
+          "test-cmsis-os-validator-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-cmsis-os-validator-hwd",
+          "test-exc-test-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-exc-test-qemu",
+          "test-exc-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-exc-test-hwd",
+          "test-fp-switch-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-fp-switch-qemu",
+          "test-fp-switch-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-fp-switch-hwd",
+          "test-instrumentation-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-instrumentation-qemu",
+          "test-instrumentation-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-instrumentation-hwd",
+          "test-mmu-test-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-mmu-test-qemu",
+          "test-mmu-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-mmu-test-hwd",
+          "test-mos-test1-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-mos-test1-qemu",
+          "test-mos-test1-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-mos-test1-hwd",
+          "test-mutex-ceiling-test-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-mutex-ceiling-test-qemu",
+          "test-mutex-ceiling-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-mutex-ceiling-test-hwd",
+          "test-mutex-stress-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-mutex-stress-qemu",
+          "test-mutex-stress-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-mutex-stress-hwd",
+          "test-rtos-apis-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-rtos-apis-qemu",
+          "test-rtos-apis-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-rtos-apis-hwd",
+          "test-sc-test-ko-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-sc-test-ko-qemu",
+          "test-sc-test-ko-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-sc-test-ko-hwd",
+          "test-semihosting-test-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-semihosting-test-qemu",
+          "test-semihosting-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-semihosting-test-hwd",
+          "test-smp_test0-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-smp_test0-qemu",
+          "test-smp_test0-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-milkv-duo-smp_test0-hwd",
+          "test-hwd-all": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && BUILD={{ properties.buildFolderRelativePath }}/platform-bin/port-tests bash ../../micro-os-plus-iii-riscv/test/boards/milkv-duo/hw-all.sh"
+        }
+      },
+      "riscv-mangopi-mq-pro-cmake-gcc-debug": {
+        "inherit": [
+          "riscv-actions",
+          "cmake-actions",
+          "riscv-none-elf-gcc-dependencies",
+          "qemu-riscv-dependencies",
+          "short-win-paths-properties"
+        ],
+        "properties": {
+          "buildType": "Debug",
+          "platformName": "riscv-mangopi-mq-pro",
+          "toolchainFileName": "riscv-none-elf-gcc.cmake",
+          "shortConfigurationName": "mqpd"
+        },
+        "actions": {
+          "test": "cd {{ properties.buildFolderRelativePath }} && ctest -V -LE hwd",
+          "test-hwd": "cd {{ properties.buildFolderRelativePath }} && ctest -V -L hwd",
+          "test-blinky-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-mangopi-mq-pro-blinky-qemu",
+          "test-blinky-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-mangopi-mq-pro-blinky-hwd",
+          "test-fp-switch-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-mangopi-mq-pro-fp-switch-qemu",
+          "test-fp-switch-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-mangopi-mq-pro-fp-switch-hwd",
+          "test-mutex-stress-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-mangopi-mq-pro-mutex-stress-qemu",
+          "test-mutex-stress-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-mangopi-mq-pro-mutex-stress-hwd",
+          "test-instrumentation-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-mangopi-mq-pro-instrumentation-qemu",
+          "test-instrumentation-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-mangopi-mq-pro-instrumentation-hwd",
+          "test-rtos-apis-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-mangopi-mq-pro-rtos-apis-qemu",
+          "test-rtos-apis-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-mangopi-mq-pro-rtos-apis-hwd",
+          "test-cmsis-os-validator-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-mangopi-mq-pro-cmsis-os-validator-qemu",
+          "test-cmsis-os-validator-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-mangopi-mq-pro-cmsis-os-validator-hwd",
+          "test-hwd-all": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && BUILD={{ properties.buildFolderRelativePath }}/platform-bin/port-tests bash ../../micro-os-plus-iii-riscv/test/boards/mangopi-mq-pro/hw-all.sh"
+        }
+      },
+      "riscv-mangopi-mq-pro-cmake-gcc-release": {
+        "inherit": [
+          "riscv-mangopi-mq-pro-cmake-gcc-debug"
+        ],
+        "properties": {
+          "buildType": "Release",
+          "shortConfigurationName": "mqpr"
+        }
+      },
+      "riscv-visionfive2-lite-cmake-gcc-debug": {
+        "inherit": [
+          "riscv-actions",
+          "cmake-actions",
+          "riscv-none-elf-gcc-dependencies",
+          "openocd-dependencies",
+          "short-win-paths-properties"
+        ],
+        "properties": {
+          "buildType": "Debug",
+          "platformName": "riscv-visionfive2-lite",
+          "toolchainFileName": "riscv-none-elf-gcc.cmake",
+          "shortConfigurationName": "rvfd"
+        },
+        "actions": {
+          "test": "cd {{ properties.buildFolderRelativePath }} && ctest -V -LE hwd",
+          "test-blinky-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-visionfive2-lite-blinky-hwd",
+          "test-clock-catchup-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-visionfive2-lite-clock-catchup-hwd",
+          "test-clock-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-visionfive2-lite-clock-test-hwd",
+          "test-cmsis-os-validator-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-visionfive2-lite-cmsis-os-validator-hwd",
+          "test-emmc-fs-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-visionfive2-lite-emmc-fs-test-hwd",
+          "test-emmc-probe-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-visionfive2-lite-emmc-probe-hwd",
+          "test-exc-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-visionfive2-lite-exc-test-hwd",
+          "test-fp-switch-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-visionfive2-lite-fp-switch-hwd",
+          "test-instrumentation-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-visionfive2-lite-instrumentation-hwd",
+          "test-mmu-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-visionfive2-lite-mmu-test-hwd",
+          "test-mos-test1-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-visionfive2-lite-mos-test1-hwd",
+          "test-mutex-stress-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-visionfive2-lite-mutex-stress-hwd",
+          "test-rtos-apis-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-visionfive2-lite-rtos-apis-hwd",
+          "test-sc-test-ko-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-visionfive2-lite-sc-test-ko-hwd",
+          "test-semihosting-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-visionfive2-lite-semihosting-test-hwd",
+          "test-smp-mat-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-visionfive2-lite-smp-mat-test-hwd",
+          "test-smp-test1-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-visionfive2-lite-smp-test1-hwd",
+          "test-smp-test2-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-visionfive2-lite-smp-test2-hwd",
+          "test-smp-test-usb-cdc-acm-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-visionfive2-lite-smp-test-usb-cdc-acm-hwd",
+          "test-smp-test-usb-cdc-file-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-visionfive2-lite-smp-test-usb-cdc-file-hwd",
+          "test-smp-test-usb-cdc-file-fs-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-visionfive2-lite-smp-test-usb-cdc-file-fs-hwd",
+          "test-smp_test0-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-visionfive2-lite-smp_test0-hwd"
+        }
+      },
+      "riscv-visionfive2-lite-cmake-gcc-release": {
+        "inherit": [
+          "riscv-actions",
+          "cmake-actions",
+          "riscv-none-elf-gcc-dependencies",
+          "openocd-dependencies",
+          "short-win-paths-properties"
+        ],
+        "properties": {
+          "buildType": "Release",
+          "platformName": "riscv-visionfive2-lite",
+          "toolchainFileName": "riscv-none-elf-gcc.cmake",
+          "shortConfigurationName": "rvfr"
+        },
+        "actions": {
+          "test": "cd {{ properties.buildFolderRelativePath }} && ctest -V -LE hwd",
+          "test-blinky-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-visionfive2-lite-blinky-hwd",
+          "test-clock-catchup-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-visionfive2-lite-clock-catchup-hwd",
+          "test-clock-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-visionfive2-lite-clock-test-hwd",
+          "test-cmsis-os-validator-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-visionfive2-lite-cmsis-os-validator-hwd",
+          "test-emmc-fs-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-visionfive2-lite-emmc-fs-test-hwd",
+          "test-emmc-probe-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-visionfive2-lite-emmc-probe-hwd",
+          "test-exc-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-visionfive2-lite-exc-test-hwd",
+          "test-fp-switch-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-visionfive2-lite-fp-switch-hwd",
+          "test-instrumentation-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-visionfive2-lite-instrumentation-hwd",
+          "test-mmu-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-visionfive2-lite-mmu-test-hwd",
+          "test-mos-test1-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-visionfive2-lite-mos-test1-hwd",
+          "test-mutex-stress-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-visionfive2-lite-mutex-stress-hwd",
+          "test-rtos-apis-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-visionfive2-lite-rtos-apis-hwd",
+          "test-sc-test-ko-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-visionfive2-lite-sc-test-ko-hwd",
+          "test-semihosting-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-visionfive2-lite-semihosting-test-hwd",
+          "test-smp-mat-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-visionfive2-lite-smp-mat-test-hwd",
+          "test-smp-test1-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-visionfive2-lite-smp-test1-hwd",
+          "test-smp-test2-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-visionfive2-lite-smp-test2-hwd",
+          "test-smp-test-usb-cdc-acm-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-visionfive2-lite-smp-test-usb-cdc-acm-hwd",
+          "test-smp-test-usb-cdc-file-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-visionfive2-lite-smp-test-usb-cdc-file-hwd",
+          "test-smp-test-usb-cdc-file-fs-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-visionfive2-lite-smp-test-usb-cdc-file-fs-hwd",
+          "test-smp_test0-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-visionfive2-lite-smp_test0-hwd"
+        }
+      },
+      "riscv-ch32v307-evt-cmake-gcc-debug": {
+        "inherit": [
+          "riscv-actions",
+          "cmake-actions",
+          "riscv-none-elf-gcc-dependencies",
+          "short-win-paths-properties"
+        ],
+        "properties": {
+          "buildType": "Debug",
+          "platformName": "riscv-ch32v307-evt",
+          "toolchainFileName": "riscv-none-elf-gcc.cmake",
+          "shortConfigurationName": "rchd"
+        },
+        "actions": {
+          "test": "cd {{ properties.buildFolderRelativePath }} && ctest -V -LE hwd",
+          "test-blinky-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-ch32v307-evt-blinky-hwd",
+          "test-board-basics-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-ch32v307-evt-board-basics-hwd",
+          "test-cmsis-os-validator-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-ch32v307-evt-cmsis-os-validator-hwd",
+          "test-fp-switch-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-ch32v307-evt-fp-switch-hwd",
+          "test-instrumentation-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-ch32v307-evt-instrumentation-hwd",
+          "test-mutex-stress-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-ch32v307-evt-mutex-stress-hwd",
+          "test-pfic-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-ch32v307-evt-pfic-test-hwd",
+          "test-rtos-apis-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-ch32v307-evt-rtos-apis-hwd",
+          "test-smp-test1-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-ch32v307-evt-smp-test1-hwd",
+          "test-usb-cdc-stream-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-ch32v307-evt-usb-cdc-stream-hwd"
+        }
+      },
+      "riscv-ch32v307-evt-cmake-gcc-release": {
+        "inherit": [
+          "riscv-actions",
+          "cmake-actions",
+          "riscv-none-elf-gcc-dependencies",
+          "short-win-paths-properties"
+        ],
+        "properties": {
+          "buildType": "Release",
+          "platformName": "riscv-ch32v307-evt",
+          "toolchainFileName": "riscv-none-elf-gcc.cmake",
+          "shortConfigurationName": "rchr"
+        },
+        "actions": {
+          "test": "cd {{ properties.buildFolderRelativePath }} && ctest -V -LE hwd",
+          "test-blinky-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-ch32v307-evt-blinky-hwd",
+          "test-board-basics-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-ch32v307-evt-board-basics-hwd",
+          "test-cmsis-os-validator-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-ch32v307-evt-cmsis-os-validator-hwd",
+          "test-fp-switch-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-ch32v307-evt-fp-switch-hwd",
+          "test-instrumentation-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-ch32v307-evt-instrumentation-hwd",
+          "test-mutex-stress-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-ch32v307-evt-mutex-stress-hwd",
+          "test-pfic-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-ch32v307-evt-pfic-test-hwd",
+          "test-rtos-apis-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-ch32v307-evt-rtos-apis-hwd",
+          "test-smp-test1-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-ch32v307-evt-smp-test1-hwd",
+          "test-usb-cdc-stream-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-ch32v307-evt-usb-cdc-stream-hwd"
+        }
+      },
+      "riscv-pico2-cmake-gcc-debug": {
+        "inherit": [
+          "riscv-actions",
+          "cmake-actions",
+          "riscv-none-elf-gcc-dependencies",
+          "qemu-riscv-dependencies",
+          "openocd-dependencies",
+          "short-win-paths-properties"
+        ],
+        "properties": {
+          "buildType": "Debug",
+          "platformName": "riscv-pico2",
+          "toolchainFileName": "riscv-none-elf-gcc.cmake",
+          "shortConfigurationName": "rp2d"
+        },
+        "actions": {
+          "test": "cd {{ properties.buildFolderRelativePath }} && ctest -V -LE hwd",
+          "test-cmsis-os-validator-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-pico2-cmsis-os-validator-hwd",
+          "test-cmsis-os-validator-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-pico2-cmsis-os-validator-qemu",
+          "test-cmsis-os-validator-ram-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-pico2-cmsis-os-validator-ram-hwd",
+          "test-exc-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-pico2-exc-test-hwd",
+          "test-exc-test-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-pico2-exc-test-qemu",
+          "test-fp-switch-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-pico2-fp-switch-hwd",
+          "test-fp-switch-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-pico2-fp-switch-qemu",
+          "test-mutex-stress-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-pico2-mutex-stress-hwd",
+          "test-mutex-stress-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-pico2-mutex-stress-qemu",
+          "test-mutex-stress-ram-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-pico2-mutex-stress-ram-hwd",
+          "test-rtos-apis-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-pico2-rtos-apis-hwd",
+          "test-rtos-apis-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-pico2-rtos-apis-qemu",
+          "test-rtos-apis-ram-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-pico2-rtos-apis-ram-hwd",
+          "test-sc-test-ko-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-pico2-sc-test-ko-hwd",
+          "test-sc-test-ko-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-pico2-sc-test-ko-qemu",
+          "test-smp-mat-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-pico2-smp-mat-test-hwd",
+          "test-smp-mat-test-ram-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-pico2-smp-mat-test-ram-hwd",
+          "test-smp-test-ko-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-pico2-smp-test-ko-hwd",
+          "test-smp-test-usb-cdc-acm-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-pico2-smp-test-usb-cdc-acm-hwd",
+          "test-smp-test-usb-hid-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-pico2-smp-test-usb-hid-hwd",
+          "test-smp-test0-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-pico2-smp-test0-hwd",
+          "test-smp-test1-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-pico2-smp-test1-hwd",
+          "test-smp-test1-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-pico2-smp-test1-qemu",
+          "test-smp-test2-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-pico2-smp-test2-hwd",
+          "test-smp-test2-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-pico2-smp-test2-qemu",
+          "test-smp-test3-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-pico2-smp-test3-hwd",
+          "test-smp-test4-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-pico2-smp-test4-hwd",
+          "test-smp-test5-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-pico2-smp-test5-hwd"
+        }
+      },
+      "riscv-pico2-cmake-gcc-release": {
+        "inherit": [
+          "riscv-actions",
+          "cmake-actions",
+          "riscv-none-elf-gcc-dependencies",
+          "qemu-riscv-dependencies",
+          "openocd-dependencies",
+          "short-win-paths-properties"
+        ],
+        "properties": {
+          "buildType": "Release",
+          "platformName": "riscv-pico2",
+          "toolchainFileName": "riscv-none-elf-gcc.cmake",
+          "shortConfigurationName": "rp2r"
+        },
+        "actions": {
+          "test": "cd {{ properties.buildFolderRelativePath }} && ctest -V -LE hwd",
+          "test-cmsis-os-validator-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-pico2-cmsis-os-validator-hwd",
+          "test-cmsis-os-validator-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-pico2-cmsis-os-validator-qemu",
+          "test-cmsis-os-validator-ram-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-pico2-cmsis-os-validator-ram-hwd",
+          "test-exc-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-pico2-exc-test-hwd",
+          "test-exc-test-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-pico2-exc-test-qemu",
+          "test-fp-switch-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-pico2-fp-switch-hwd",
+          "test-fp-switch-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-pico2-fp-switch-qemu",
+          "test-mutex-stress-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-pico2-mutex-stress-hwd",
+          "test-mutex-stress-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-pico2-mutex-stress-qemu",
+          "test-mutex-stress-ram-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-pico2-mutex-stress-ram-hwd",
+          "test-rtos-apis-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-pico2-rtos-apis-hwd",
+          "test-rtos-apis-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-pico2-rtos-apis-qemu",
+          "test-rtos-apis-ram-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-pico2-rtos-apis-ram-hwd",
+          "test-sc-test-ko-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-pico2-sc-test-ko-hwd",
+          "test-sc-test-ko-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-pico2-sc-test-ko-qemu",
+          "test-smp-mat-test-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-pico2-smp-mat-test-hwd",
+          "test-smp-mat-test-ram-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-pico2-smp-mat-test-ram-hwd",
+          "test-smp-test-ko-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-pico2-smp-test-ko-hwd",
+          "test-smp-test-usb-cdc-acm-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-pico2-smp-test-usb-cdc-acm-hwd",
+          "test-smp-test-usb-hid-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-pico2-smp-test-usb-hid-hwd",
+          "test-smp-test0-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-pico2-smp-test0-hwd",
+          "test-smp-test1-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-pico2-smp-test1-hwd",
+          "test-smp-test1-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-pico2-smp-test1-qemu",
+          "test-smp-test2-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-pico2-smp-test2-hwd",
+          "test-smp-test2-qemu": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-pico2-smp-test2-qemu",
+          "test-smp-test3-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-pico2-smp-test3-hwd",
+          "test-smp-test4-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-pico2-smp-test4-hwd",
+          "test-smp-test5-hwd": "{{ properties.commandCMakePrepareWithToolchain }} && {{ properties.commandCMakeBuild }} && cd {{ properties.buildFolderRelativePath }} && ctest -V -R riscv-pico2-smp-test5-hwd"
+        }
+      }
+    }
+  }
+}
