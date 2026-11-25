@@ -1,4 +1,4 @@
 [submodule "micro-os-plus-iii-riscv.git"]
-	path = micro-os-plus-iii-riscv.git
+	path = micro-os-plus-iii-riscv
 	url = https://github.com/dan-maio/micro-os-plus-iii-riscv.git
 	branch = smp
